@@ -4,40 +4,35 @@ create database if not exists navigator_db;
 
 use navigator_db;
 
-create table if not exists addresses
-  (
-     id              SERIAL,-- BIGINT UNSIGNED NOT NULL AUTOINCREMENT UNIQUE
-     city            varchar(45) not null,
-     street          varchar(45) not null,
-     building_number varchar(45) not null,
-     postal_code     varchar(45) not null,
-     primary key (id)
-  );
-
-create table if not exists workshops
-  (
-     id          SERIAL,
-     addresses_id bigint unsigned not null,
-     name        varchar(45) not null,
-     nip         varchar(45) not null,
-     primary key (id),
-     constraint fk_workshops_addresses foreign key (addresses_id) references
-     addresses (id) on delete cascade on update no action
-  );
-
-CREATE TABLE Cities (
-    id SERIAL, -- BIGINT UNSIGNED NOT NULL AUTOINCREMENT UNIQUE
+CREATE TABLE cities (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, -- SERIAL
     name VARCHAR(50) NOT NULL,
-    latitude DOUBLE NOT NULL,
-    longitude DOUBLE NOT NULL
+    x_pos DOUBLE NOT NULL,
+    y_pos DOUBLE NOT NULL,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE Routes (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    start_city_id INT,
-    end_city_id INT,
+CREATE TABLE roads (
+    start_city_id BIGINT UNSIGNED NOT NULL,
+    end_city_id BIGINT UNSIGNED NOT NULL ,
     distance INT NOT NULL,
-    intermediate_cities VARCHAR(255),
-    FOREIGN KEY (start_city_id) REFERENCES Cities(id),
-    FOREIGN KEY (end_city_id) REFERENCES Cities(id)
+    PRIMARY KEY (start_city_id, end_city_id),
+    CONSTRAINT fk_roads_start_city_id FOREIGN KEY (start_city_id) REFERENCES Cities(id) on delete cascade on update no action,
+    CONSTRAINT fk_roads_end_city_id FOREIGN KEY (end_city_id) REFERENCES Cities(id) on delete cascade on update no action
 );
+
+-- CREATE TABLE IF NOT EXISTS routes (
+--     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+--     distance INT NOT NULL,
+--     PRIMARY KEY (id)
+-- );
+
+-- CREATE TABLE IF NOT EXISTS cities_has_routes (
+--     cities_id BIGINT UNSIGNED NOT NULL,
+--     routes_id BIGINT UNSIGNED NOT NULL,
+--     PRIMARY KEY (cities_id, routes_id),
+--     CONSTRAINT fk_cities_has_routes FOREIGN KEY (cities_id) REFERENCES
+-- 	cities (id) on delete cascade on update no action,
+--     CONSTRAINT fk_cities_has_routes2 FOREIGN KEY (routes_id) REFERENCES
+-- 	routes (id) on delete cascade on update no action
+-- );
