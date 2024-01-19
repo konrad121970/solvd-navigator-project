@@ -9,7 +9,7 @@ public interface RoadRepository {
 
     Road findRoadByStartAndEndCity(Long startCityId, Long endCityId);
 
-    List<Road> findByCityId(Long cityId);
+    List<Road> findyByStartCityId(Long cityId);
 
     void updateRoadDistance(Long startCityId, Long endCityId, int newDistance);
 

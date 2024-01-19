@@ -34,7 +34,7 @@ public class RoadRepositoryImpl implements RoadRepository {
     }
 
     @Override
-    public List<Road> findByCityId(Long cityId) {
+    public List<Road> findyByStartCityId(Long cityId) {
         List<Road> roads = new ArrayList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
