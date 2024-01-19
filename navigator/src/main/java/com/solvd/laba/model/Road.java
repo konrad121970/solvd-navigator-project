@@ -1,32 +1,14 @@
 package com.solvd.laba.model;
 
 public class Road {
-
-    private Long id;
     private int startCityId;
     private int endCityId;
     private int distance;
 
-    public Road(Long id, int startCityId, int endCityId, int distance) {
-        this.id = id;
-        this.startCityId = startCityId;
-        this.endCityId = endCityId;
-        this.distance = distance;
-    }
-
-    // Constructor for creating new road without id:
     public Road(int startCityId, int endCityId, int distance) {
         this.startCityId = startCityId;
         this.endCityId = endCityId;
         this.distance = distance;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getStartCityId() {

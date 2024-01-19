@@ -19,7 +19,7 @@ public class CityDAO implements CityRepository {
     private static final String CREATE_CITY_QUERY = "INSERT INTO cities (name, x_pos, y_pos) VALUES (?, ?, ?)";
     private static final String CREATE_ROAD_QUERY = "INSERT INTO roads (start_city_id, end_city_id, distance) VALUES (?, ?, ?)";
     private static final String GET_CITY_BY_ID_QUERY = "SELECT id, name, x_pos, y_pos FROM cities WHERE id = ?";
-    private static final String GET_ROADS_BY_CITY_ID_QUERY = "SELECT id, start_city_id, end_city_id, distance FROM roads " +
+    private static final String GET_ROADS_BY_CITY_ID_QUERY = "SELECT start_city_id, end_city_id, distance FROM roads " +
             "WHERE start_city_id = ? OR end_city_id = ?";
     private static final String UPDATE_CITY_QUERY = "UPDATE cities SET name = ?, x_pos = ?, y_pos = ? WHERE id = ?";
     private static final String DELETE_CITY_QUERY = "DELETE FROM cities WHERE id = ?";
@@ -95,7 +95,7 @@ public class CityDAO implements CityRepository {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                     // Populate city and associated roads
-                    city = mapCityRow(connection, rs);
+                    city = mapRow(connection, rs);
                 }
             }
             connection.commit();
@@ -188,7 +188,7 @@ public class CityDAO implements CityRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
-    private City mapCityRow(Connection connection, ResultSet rs) throws SQLException {
+    private City mapRow(Connection connection, ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");
         double xPos = rs.getDouble("x_pos");
@@ -205,7 +205,6 @@ public class CityDAO implements CityRepository {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     roads.add(new Road(
-                            (long) rs.getInt("id"),
                             rs.getInt("start_city_id"),
                             rs.getInt("end_city_id"),
                             rs.getInt("distance")
