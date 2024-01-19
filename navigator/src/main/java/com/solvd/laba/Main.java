@@ -2,10 +2,10 @@ package com.solvd.laba;
 
 import com.solvd.laba.model.City;
 import com.solvd.laba.model.Road;
-import com.solvd.laba.persistence.CityRepository;
-import com.solvd.laba.persistence.RoadRepository;
-import com.solvd.laba.persistence.impl.CityRepositoryImpl;
-import com.solvd.laba.persistence.impl.RoadRepositoryImpl;
+import com.solvd.laba.persistence.city.CityRepository;
+import com.solvd.laba.persistence.city.RoadRepository;
+import com.solvd.laba.persistence.city.impl.CityRepositoryImpl;
+import com.solvd.laba.persistence.city.impl.RoadRepositoryImpl;
 
 public class Main {
     public static void main(String[] args) {
