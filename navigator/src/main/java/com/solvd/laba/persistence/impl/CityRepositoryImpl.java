@@ -12,21 +12,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CityDAO implements CityRepository {
+public class CityRepositoryImpl implements CityRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
 
     private static final String CREATE_CITY_QUERY = "INSERT INTO cities (name, x_pos, y_pos) VALUES (?, ?, ?)";
-    private static final String CREATE_ROAD_QUERY = "INSERT INTO roads (start_city_id, end_city_id, distance) VALUES (?, ?, ?)";
-    private static final String GET_CITY_BY_ID_QUERY = "SELECT id, name, x_pos, y_pos FROM cities WHERE id = ?";
-    private static final String GET_ROADS_BY_CITY_ID_QUERY = "SELECT start_city_id, end_city_id, distance FROM roads " +
-            "WHERE start_city_id = ? OR end_city_id = ?";
+    private static final String GET_CITY_BY_ID_QUERY = "SELECT id as city_id, name as city_name, x_pos as city_x_pos, y_pos as city_y_pos FROM cities WHERE id = ?";
     private static final String UPDATE_CITY_QUERY = "UPDATE cities SET name = ?, x_pos = ?, y_pos = ? WHERE id = ?";
     private static final String DELETE_CITY_QUERY = "DELETE FROM cities WHERE id = ?";
-    private static final String DELETE_ROADS_QUERY = "DELETE FROM roads WHERE start_city_id = ? OR end_city_id = ?";
+
+
 
     @Override
-    public void create(City city, List<Road> roads) {
+    public void create(City city) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             connection.setAutoCommit(false);
@@ -51,17 +49,17 @@ public class CityDAO implements CityRepository {
                 }
             }
 
-            // Insert the roads
-            if (roads != null) {
-                for (Road road : roads) {
-                    try (PreparedStatement roadStmt = connection.prepareStatement(CREATE_ROAD_QUERY)) {
-                        roadStmt.setInt(1, road.getStartCityId());
-                        roadStmt.setInt(2, road.getEndCityId());
-                        roadStmt.setInt(3, road.getDistance());
-                        roadStmt.executeUpdate();
-                    }
-                }
-            }
+//            // Insert the roads
+//            if (roads != null) {
+//                for (Road road : roads) {
+//                    try (PreparedStatement roadStmt = connection.prepareStatement(CREATE_ROAD_QUERY)) {
+//                        roadStmt.setInt(1, road.getStartCityId());
+//                        roadStmt.setInt(2, road.getEndCityId());
+//                        roadStmt.setInt(3, road.getDistance());
+//                        roadStmt.executeUpdate();
+//                    }
+//                }
+//            }
 
             connection.commit();
             LOGGER.info("City created: {}", city);
@@ -83,7 +81,7 @@ public class CityDAO implements CityRepository {
     }
 
     @Override
-    public City findById(int id) {
+    public City findById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
         City city = null;
         try {
@@ -91,7 +89,7 @@ public class CityDAO implements CityRepository {
 
             // Get the city by id
             try (PreparedStatement stmt = connection.prepareStatement(GET_CITY_BY_ID_QUERY)) {
-                stmt.setInt(1, id);
+                stmt.setLong(1, id);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                     // Populate city and associated roads
@@ -119,7 +117,7 @@ public class CityDAO implements CityRepository {
 
 
     @Override
-    public void updateById(int id, City city) {
+    public void updateById(City city) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             connection.setAutoCommit(false);
@@ -128,7 +126,7 @@ public class CityDAO implements CityRepository {
                 stmt.setString(1, city.getName());
                 stmt.setDouble(2, city.getxPos());
                 stmt.setDouble(3, city.getyPos());
-                stmt.setInt(4, id);
+                stmt.setLong(4, city.getId());
                 stmt.executeUpdate();
             }
 
@@ -152,21 +150,21 @@ public class CityDAO implements CityRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             connection.setAutoCommit(false);
 
-            // Delete roads associated with the city
-            try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
-                stmt.setInt(1, id);
-                stmt.setInt(2, id);
-                stmt.executeUpdate();
-            }
+//            // Delete roads associated with the city
+//            try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
+//                stmt.setInt(1, id);
+//                stmt.setInt(2, id);
+//                stmt.executeUpdate();
+//            }
 
             // Delete the city
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_CITY_QUERY)) {
-                stmt.setInt(1, id);
+                stmt.setLong(1, id);
                 stmt.executeUpdate();
             }
 
@@ -189,29 +187,29 @@ public class CityDAO implements CityRepository {
         }
     }
     private City mapRow(Connection connection, ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        double xPos = rs.getDouble("x_pos");
-        double yPos = rs.getDouble("y_pos");
-        List<Road> roads = getRoadsForCity(connection, id);
-        return new City((long) id, name, xPos, yPos, roads);
+        int id = rs.getInt("city_id");
+        String name = rs.getString("city_name");
+        double xPos = rs.getDouble("city_x_pos");
+        double yPos = rs.getDouble("city_y_pos");
+//        List<Road> roads = getRoadsForCity(connection, id);
+        return new City((long) id, name, xPos, yPos, null);
     }
 
-    private List<Road> getRoadsForCity(Connection connection, int cityId) throws SQLException {
-        List<Road> roads = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(GET_ROADS_BY_CITY_ID_QUERY)) {
-            stmt.setInt(1, cityId);
-            stmt.setInt(2, cityId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    roads.add(new Road(
-                            rs.getInt("start_city_id"),
-                            rs.getInt("end_city_id"),
-                            rs.getInt("distance")
-                    ));
-                }
-            }
-        }
-        return roads;
-    }
+//    private List<Road> getRoadsForCity(Connection connection, int cityId) throws SQLException {
+//        List<Road> roads = new ArrayList<>();
+//        try (PreparedStatement stmt = connection.prepareStatement(GET_ROADS_BY_CITY_ID_QUERY)) {
+//            stmt.setInt(1, cityId);
+//            stmt.setInt(2, cityId);
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    roads.add(new Road(
+//                            rs.getInt("start_city_id"),
+//                            rs.getInt("end_city_id"),
+//                            rs.getInt("distance")
+//                    ));
+//                }
+//            }
+//        }
+//        return roads;
+//    }
 }
