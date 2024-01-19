@@ -11,21 +11,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoadDAO implements RoadRepository {
+public class RoadRepositoryImpl implements RoadRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-
     private static final String INSERT_ROAD_QUERY = "INSERT INTO roads (start_city_id, end_city_id, distance) VALUES (?, ?, ?)";
-    private static final String SELECT_ROADS_BY_CITY_ID_QUERY = "SELECT start_city_id, end_city_id, distance FROM roads " +
-            "WHERE start_city_id = ? OR end_city_id = ?";
-
+    private static final String SELECT_ROADS_BY_START_CITY_ID_QUERY = "SELECT start_city_id as road_start_city_id, end_city_id as road_end_city_id, distance as road_distance FROM roads " +
+            "WHERE start_city_id = ?";
+    private static final String DELETE_ROADS_QUERY = "DELETE FROM roads WHERE start_city_id = ? OR end_city_id = ?";
+    private static final String UPDATE_ROADS_QUERY = "UPDATE roads SET distance = ? WHERE start_city_id = ? AND end_city_id = ?";
 
     @Override
     public void create(Road road) {
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement stmt = connection.prepareStatement(INSERT_ROAD_QUERY)) {
-            stmt.setInt(1, road.getStartCityId());
-            stmt.setInt(2, road.getEndCityId());
+            stmt.setLong(1, road.getStartCityId());
+            stmt.setLong(2, road.getEndCityId());
             stmt.setInt(3, road.getDistance());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -34,12 +34,12 @@ public class RoadDAO implements RoadRepository {
     }
 
     @Override
-    public List<Road> findByCityId(int cityId) {
+    public List<Road> findByCityId(Long cityId) {
         List<Road> roads = new ArrayList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_CITY_ID_QUERY)) {
-            stmt.setInt(1, cityId);
-            stmt.setInt(2, cityId);
+             PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
+            stmt.setLong(1, cityId);
+//            stmt.setLong(2, cityId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     roads.add(mapRow(rs));
@@ -51,13 +51,13 @@ public class RoadDAO implements RoadRepository {
         return roads;
     }
 
-    public Road findRoadByStartAndEndCity(int startCityId, int endCityId) {
+    public Road findRoadByStartAndEndCity(Long startCityId, Long endCityId) {
         Road road = null;
         String sql = "SELECT * FROM roads WHERE start_city_id = ? AND end_city_id = ?";
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, startCityId);
-            stmt.setInt(2, endCityId);
+            stmt.setLong(1, startCityId);
+            stmt.setLong(2, endCityId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 road = mapRow(rs);
@@ -68,25 +68,23 @@ public class RoadDAO implements RoadRepository {
         return road;
     }
 
-    public void updateRoadDistance(int startCityId, int endCityId, int newDistance) {
-        String sql = "UPDATE roads SET distance = ? WHERE start_city_id = ? AND end_city_id = ?";
+    public void updateRoadDistance(Long startCityId, Long endCityId, int newDistance) {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
+             PreparedStatement stmt = connection.prepareStatement(UPDATE_ROADS_QUERY)) {
             stmt.setInt(1, newDistance);
-            stmt.setInt(2, startCityId);
-            stmt.setInt(3, endCityId);
+            stmt.setLong(2, startCityId);
+            stmt.setLong(3, endCityId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Error updating road: {}", e.getMessage());
         }
     }
 
-    public void deleteRoad(int startCityId, int endCityId) {
-        String sql = "DELETE FROM roads WHERE start_city_id = ? AND end_city_id = ?";
+    public void deleteRoad(Long startCityId, Long endCityId) {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, startCityId);
-            stmt.setInt(2, endCityId);
+             PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
+            stmt.setLong(1, startCityId);
+            stmt.setLong(2, endCityId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Error deleting road: {}", e.getMessage());
@@ -95,9 +93,9 @@ public class RoadDAO implements RoadRepository {
 
 
     private Road mapRow(ResultSet rs) throws SQLException {
-        int startCityId = rs.getInt("start_city_id");
-        int endCityId = rs.getInt("end_city_id");
-        int distance = rs.getInt("distance");
+        Long startCityId = rs.getLong("road_start_city_id");
+        Long endCityId = rs.getLong("road_end_city_id");
+        int distance = rs.getInt("road_distance");
         return new Road(startCityId, endCityId, distance);
     }
 }
