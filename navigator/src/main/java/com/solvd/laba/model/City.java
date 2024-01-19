@@ -10,7 +10,7 @@ public class City {
     private List<Road> roads;
 
     public City(Long id, String name, Double xPos, Double yPos, List<Road> roads) {
-        this.id = Long.valueOf(id);
+        this.id = id;
         this.name = name;
         this.xPos = xPos;
         this.yPos = yPos;
