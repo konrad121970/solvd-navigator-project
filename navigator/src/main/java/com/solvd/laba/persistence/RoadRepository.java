@@ -7,11 +7,11 @@ public interface RoadRepository {
 
     void create(Road road);
 
-    Road findRoadByStartAndEndCity(int startCityId, int endCityId);
+    Road findRoadByStartAndEndCity(Long startCityId, Long endCityId);
 
-    List<Road> findByCityId(int cityId);
+    List<Road> findByCityId(Long cityId);
 
-    void updateRoadDistance(int startCityId, int endCityId, int newDistance);
+    void updateRoadDistance(Long startCityId, Long endCityId, int newDistance);
 
-    void deleteRoad(int startCityId, int endCityId);
+    void deleteRoad(Long startCityId, Long endCityId);
 }
