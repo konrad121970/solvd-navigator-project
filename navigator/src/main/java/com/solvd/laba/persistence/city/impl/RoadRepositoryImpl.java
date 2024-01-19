@@ -1,8 +1,8 @@
-package com.solvd.laba.persistence.impl;
+package com.solvd.laba.persistence.city.impl;
 
 import com.solvd.laba.model.Road;
 import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.RoadRepository;
+import com.solvd.laba.persistence.city.RoadRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +34,7 @@ public class RoadRepositoryImpl implements RoadRepository {
     }
 
     @Override
-    public List<Road> findyByStartCityId(Long cityId) {
+    public List<Road> findByStartCityId(Long cityId) {
         List<Road> roads = new ArrayList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {

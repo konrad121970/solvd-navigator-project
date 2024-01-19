@@ -1,4 +1,4 @@
-package com.solvd.laba.persistence;
+package com.solvd.laba.persistence.city;
 
 import com.solvd.laba.model.City;
 

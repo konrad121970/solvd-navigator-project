@@ -1,16 +1,13 @@
-package com.solvd.laba.persistence.impl;
+package com.solvd.laba.persistence.city.impl;
 
 import com.solvd.laba.model.City;
-import com.solvd.laba.model.Road;
-import com.solvd.laba.persistence.CityRepository;
+import com.solvd.laba.persistence.city.CityRepository;
 import com.solvd.laba.persistence.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CityRepositoryImpl implements CityRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());

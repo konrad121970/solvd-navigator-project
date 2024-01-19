@@ -1,4 +1,4 @@
-package com.solvd.laba.persistence;
+package com.solvd.laba.persistence.city;
 
 import com.solvd.laba.model.Road;
 import java.util.List;
@@ -9,7 +9,7 @@ public interface RoadRepository {
 
     Road findRoadByStartAndEndCity(Long startCityId, Long endCityId);
 
-    List<Road> findyByStartCityId(Long cityId);
+    List<Road> findByStartCityId(Long cityId);
 
     void updateRoadDistance(Long startCityId, Long endCityId, int newDistance);
 
