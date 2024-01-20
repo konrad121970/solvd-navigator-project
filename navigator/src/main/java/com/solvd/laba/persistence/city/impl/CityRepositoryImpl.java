@@ -77,7 +77,7 @@ public class CityRepositoryImpl implements CityRepository {
                 stmt.setLong(1, id);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
-                    // Populate city and associated roads
+                    // Populate city and WITHOUT associated roads
                     city = mapRow(connection, rs);
                 }
             }

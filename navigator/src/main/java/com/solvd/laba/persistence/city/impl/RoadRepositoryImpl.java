@@ -33,6 +33,14 @@ public class RoadRepositoryImpl implements RoadRepository {
                 stmt.executeUpdate();
             }
 
+            // The same road but the other way around
+            try (PreparedStatement stmt = connection.prepareStatement(INSERT_ROAD_QUERY)) {
+                stmt.setLong(1, road.getEndCityId());
+                stmt.setLong(2, road.getStartCityId());
+                stmt.setInt(3, road.getDistance());
+                stmt.executeUpdate();
+            }
+
             connection.commit();
         } catch (SQLException e) {
             try {
@@ -161,6 +169,13 @@ public class RoadRepositoryImpl implements RoadRepository {
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
                 stmt.setLong(1, startCityId);
                 stmt.setLong(2, endCityId);
+                stmt.executeUpdate();
+            }
+
+            // Delete two ways
+            try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
+                stmt.setLong(1, endCityId);
+                stmt.setLong(2, startCityId);
                 stmt.executeUpdate();
             }
 
