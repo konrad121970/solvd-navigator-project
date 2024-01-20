@@ -1,29 +1,29 @@
 package com.solvd.laba.model;
 
 public class Road {
-    private int startCityId;
-    private int endCityId;
+    private Long startCityId;
+    private Long endCityId;
     private int distance;
 
-    public Road(int startCityId, int endCityId, int distance) {
+    public Road(Long startCityId, Long endCityId, int distance) {
         this.startCityId = startCityId;
         this.endCityId = endCityId;
         this.distance = distance;
     }
 
-    public int getStartCityId() {
+    public Long getStartCityId() {
         return startCityId;
     }
 
-    public void setStartCityId(int startCityId) {
+    public void setStartCityId(Long startCityId) {
         this.startCityId = startCityId;
     }
 
-    public int getEndCityId() {
+    public Long getEndCityId() {
         return endCityId;
     }
 
-    public void setEndCityId(int endCityId) {
+    public void setEndCityId(Long endCityId) {
         this.endCityId = endCityId;
     }
 
