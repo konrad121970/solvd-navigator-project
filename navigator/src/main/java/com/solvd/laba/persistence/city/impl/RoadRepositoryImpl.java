@@ -22,75 +22,165 @@ public class RoadRepositoryImpl implements RoadRepository {
 
     @Override
     public void create(Road road) {
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(INSERT_ROAD_QUERY)) {
-            stmt.setLong(1, road.getStartCityId());
-            stmt.setLong(2, road.getEndCityId());
-            stmt.setInt(3, road.getDistance());
-            stmt.executeUpdate();
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(INSERT_ROAD_QUERY)) {
+                stmt.setLong(1, road.getStartCityId());
+                stmt.setLong(2, road.getEndCityId());
+                stmt.setInt(3, road.getDistance());
+                stmt.executeUpdate();
+            }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
             LOGGER.error("Error creating road: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
         }
     }
 
     @Override
     public List<Road> findByStartCityId(Long cityId) {
         List<Road> roads = new ArrayList<>();
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
-            stmt.setLong(1, cityId);
-//            stmt.setLong(2, cityId);
-            try (ResultSet rs = stmt.executeQuery()) {
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
+                stmt.setLong(1, cityId);
+                ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     roads.add(mapRow(rs));
                 }
             }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
             LOGGER.error("Error finding roads by city ID: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
         }
         return roads;
     }
 
+    @Override
     public Road findRoadByStartAndEndCity(Long startCityId, Long endCityId) {
         Road road = null;
-        String sql = "SELECT * FROM roads WHERE start_city_id = ? AND end_city_id = ?";
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, startCityId);
-            stmt.setLong(2, endCityId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                road = mapRow(rs);
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
+                stmt.setLong(1, startCityId);
+                stmt.setLong(2, endCityId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    road = mapRow(rs);
+                }
             }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
             LOGGER.error("Error finding road: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
         }
         return road;
     }
 
+
+    @Override
     public void updateRoadDistance(Long startCityId, Long endCityId, int newDistance) {
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(UPDATE_ROADS_QUERY)) {
-            stmt.setInt(1, newDistance);
-            stmt.setLong(2, startCityId);
-            stmt.setLong(3, endCityId);
-            stmt.executeUpdate();
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(UPDATE_ROADS_QUERY)) {
+                stmt.setInt(1, newDistance);
+                stmt.setLong(2, startCityId);
+                stmt.setLong(3, endCityId);
+                stmt.executeUpdate();
+            }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
             LOGGER.error("Error updating road: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
         }
     }
 
+    @Override
     public void deleteRoad(Long startCityId, Long endCityId) {
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
-            stmt.setLong(1, startCityId);
-            stmt.setLong(2, endCityId);
-            stmt.executeUpdate();
+        Connection connection = CONNECTION_POOL.getConnection();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
+                stmt.setLong(1, startCityId);
+                stmt.setLong(2, endCityId);
+                stmt.executeUpdate();
+            }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
             LOGGER.error("Error deleting road: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
         }
     }
-
 
     private Road mapRow(ResultSet rs) throws SQLException {
         Long startCityId = rs.getLong("road_start_city_id");

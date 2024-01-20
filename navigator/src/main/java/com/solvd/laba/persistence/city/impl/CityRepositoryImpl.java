@@ -46,18 +46,6 @@ public class CityRepositoryImpl implements CityRepository {
                 }
             }
 
-//            // Insert the roads
-//            if (roads != null) {
-//                for (Road road : roads) {
-//                    try (PreparedStatement roadStmt = connection.prepareStatement(CREATE_ROAD_QUERY)) {
-//                        roadStmt.setInt(1, road.getStartCityId());
-//                        roadStmt.setInt(2, road.getEndCityId());
-//                        roadStmt.setInt(3, road.getDistance());
-//                        roadStmt.executeUpdate();
-//                    }
-//                }
-//            }
-
             connection.commit();
             LOGGER.info("City created: {}", city);
         } catch (SQLException e) {
@@ -151,14 +139,6 @@ public class CityRepositoryImpl implements CityRepository {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             connection.setAutoCommit(false);
-
-//            // Delete roads associated with the city
-//            try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
-//                stmt.setInt(1, id);
-//                stmt.setInt(2, id);
-//                stmt.executeUpdate();
-//            }
-
             // Delete the city
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_CITY_QUERY)) {
                 stmt.setLong(1, id);
@@ -188,25 +168,6 @@ public class CityRepositoryImpl implements CityRepository {
         String name = rs.getString("city_name");
         double xPos = rs.getDouble("city_x_pos");
         double yPos = rs.getDouble("city_y_pos");
-//        List<Road> roads = getRoadsForCity(connection, id);
         return new City((long) id, name, xPos, yPos, null);
     }
-
-//    private List<Road> getRoadsForCity(Connection connection, int cityId) throws SQLException {
-//        List<Road> roads = new ArrayList<>();
-//        try (PreparedStatement stmt = connection.prepareStatement(GET_ROADS_BY_CITY_ID_QUERY)) {
-//            stmt.setInt(1, cityId);
-//            stmt.setInt(2, cityId);
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                while (rs.next()) {
-//                    roads.add(new Road(
-//                            rs.getInt("start_city_id"),
-//                            rs.getInt("end_city_id"),
-//                            rs.getInt("distance")
-//                    ));
-//                }
-//            }
-//        }
-//        return roads;
-//    }
 }
