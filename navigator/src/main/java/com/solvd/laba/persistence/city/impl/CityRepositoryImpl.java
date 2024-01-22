@@ -8,17 +8,18 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CityRepositoryImpl implements CityRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
 
+    private static final String GET_ALL_CITIES_QUERY = "SELECT id as city_id, name as city_name, x_pos as city_x_pos, y_pos as city_y_pos FROM cities";
     private static final String CREATE_CITY_QUERY = "INSERT INTO cities (name, x_pos, y_pos) VALUES (?, ?, ?)";
     private static final String GET_CITY_BY_ID_QUERY = "SELECT id as city_id, name as city_name, x_pos as city_x_pos, y_pos as city_y_pos FROM cities WHERE id = ?";
     private static final String UPDATE_CITY_QUERY = "UPDATE cities SET name = ?, x_pos = ?, y_pos = ? WHERE id = ?";
     private static final String DELETE_CITY_QUERY = "DELETE FROM cities WHERE id = ?";
-
-
 
     @Override
     public void create(City city) {
@@ -98,6 +99,41 @@ public class CityRepositoryImpl implements CityRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         return city;
+    }
+
+    @Override
+    public List<City> getAllCities() {
+        Connection connection = CONNECTION_POOL.getConnection();
+        List<City> cities = new ArrayList<>();
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement stmt = connection.prepareStatement(GET_ALL_CITIES_QUERY)) {
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    // Populate each city WITHOUT associated roads
+                    City city = mapRow(connection, rs);
+                    cities.add(city);
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                LOGGER.error("Rollback failed: {}", ex.getMessage());
+            }
+            LOGGER.error("Query failed: {}", e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
+            }
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return cities;
     }
 
 
