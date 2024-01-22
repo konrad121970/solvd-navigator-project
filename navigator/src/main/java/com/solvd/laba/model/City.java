@@ -64,4 +64,9 @@ public class City {
     public void setyPos(Double yPos) {
         this.yPos = yPos;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

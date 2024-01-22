@@ -4,6 +4,7 @@ import com.solvd.laba.model.City;
 import com.solvd.laba.model.Road;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
     private Map<Long, City> cities;
@@ -20,7 +21,7 @@ public class Graph {
         cities.forEach(city -> addCity(city));
     }
 
-    public List<Long> findShortestPath(Long startCityId, Long endCityId) {
+    public List<City> findShortestPath(Long startCityId, Long endCityId) {
         Map<Long, Integer> distances = new HashMap<>();
         Map<Long, Long> predecessors = new HashMap<>();
         PriorityQueue<Long> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(distances::get));
@@ -56,7 +57,7 @@ public class Graph {
         }
         Collections.reverse(shortestPath);
 
-        return shortestPath;
+        return shortestPath.stream().map(cities::get).collect(Collectors.toList());
     }
 
     public Map<Long, City> getCities() {
