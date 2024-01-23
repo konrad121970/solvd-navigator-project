@@ -2,9 +2,7 @@ package com.solvd.laba.service.navigator.impl;
 
 import com.solvd.laba.model.City;
 import com.solvd.laba.service.city.ICityService;
-import com.solvd.laba.service.city.IRoadService;
 import com.solvd.laba.service.city.impl.CityService;
-import com.solvd.laba.service.city.impl.RoadService;
 import com.solvd.laba.service.navigator.INavigatorService;
 
 import java.util.*;
@@ -40,5 +38,9 @@ public class NavigatorService implements INavigatorService {
         return null;
     }
 
+    @Override
+    public int getRoadLength(List<City> cities){
+        return graph.getRoadLength(cities);
+    }
 
 }

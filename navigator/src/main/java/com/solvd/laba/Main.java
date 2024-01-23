@@ -18,6 +18,8 @@ public class Main {
 
         System.out.println(navigatorService.findShortestPath(city1, city2));
 
+        System.out.println(navigatorService.getRoadLength(navigatorService.findShortestPath(city1, city2)));
+
         System.out.println();
 
     }
