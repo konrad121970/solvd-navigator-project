@@ -38,4 +38,5 @@ build/
 .DS_Store
 .idea
 /.idea/
+/target/
 /.idea/sonarlint/
