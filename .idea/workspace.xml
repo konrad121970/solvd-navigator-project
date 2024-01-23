@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="266c9a72-087e-4e44-9b5a-6b052ab3d419" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/navigator/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/INavigatorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/INavigatorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/impl/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/impl/Graph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/impl/NavigatorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/java/com/solvd/laba/service/navigator/impl/NavigatorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/resources/database/navigator_schema.mwb" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/resources/database/navigator_schema.mwb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/resources/database/navigator_schema.mwb.bak" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/resources/database/navigator_schema.mwb.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigator/src/main/resources/database/scripts/create_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/navigator/src/main/resources/database/scripts/create_tables.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
