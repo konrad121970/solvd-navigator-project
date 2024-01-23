@@ -60,6 +60,24 @@ public class Graph {
         return shortestPath.stream().map(cities::get).collect(Collectors.toList());
     }
 
+    public int getRoadLength(List<City> citiesOnPath) {
+        int roadLength = 0;
+
+        for (int i = 0; i < citiesOnPath.size() - 1; i++) {
+            City currentCity = citiesOnPath.get(i);
+            City nextCity = citiesOnPath.get(i + 1);
+
+            for (Road road : currentCity.getRoads()) {
+                if (road.getEndCityId().equals(nextCity.getId())) {
+                    roadLength += road.getDistance();
+                    break;
+                }
+            }
+        }
+
+        return roadLength;
+    }
+
     public Map<Long, City> getCities() {
         return cities;
     }

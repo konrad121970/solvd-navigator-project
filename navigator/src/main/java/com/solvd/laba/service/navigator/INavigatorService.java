@@ -9,4 +9,6 @@ public interface INavigatorService {
     List<City> findShortestPath(City startCity, City endCity);
 
     List<City> findShortestPathWithStop(City startCity, City intermediateCity, City endCity);
+
+    int getRoadLength(List<City> cities);
 }

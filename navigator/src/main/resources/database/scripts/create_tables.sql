@@ -17,8 +17,8 @@ CREATE TABLE roads (
     end_city_id BIGINT UNSIGNED NOT NULL ,
     distance INT NOT NULL,
     PRIMARY KEY (start_city_id, end_city_id),
-    CONSTRAINT fk_roads_start_city_id FOREIGN KEY (start_city_id) REFERENCES Cities(id) on delete cascade on update no action,
-    CONSTRAINT fk_roads_end_city_id FOREIGN KEY (end_city_id) REFERENCES Cities(id) on delete cascade on update no action
+    CONSTRAINT fk_roads_start_city_id FOREIGN KEY (start_city_id) REFERENCES cities(id) on delete cascade on update no action,
+    CONSTRAINT fk_roads_end_city_id FOREIGN KEY (end_city_id) REFERENCES cities(id) on delete cascade on update no action
 );
 
 -- CREATE TABLE IF NOT EXISTS routes (
