@@ -6,6 +6,7 @@ import com.solvd.laba.service.city.IRoadService;
 import com.solvd.laba.service.city.impl.CityService;
 import com.solvd.laba.service.city.impl.RoadService;
 import com.solvd.laba.service.navigator.INavigatorService;
+import com.solvd.laba.service.navigator.ISavedRoutesService;
 
 import java.util.*;
 
@@ -13,32 +14,47 @@ public class NavigatorService implements INavigatorService {
 
     private Graph graph;
     private ICityService cityService;
-//    private IRoadService roadService;
+    private ISavedRoutesService savedRoutesService;
+
 
     public NavigatorService() {
         cityService = new CityService();
-//        roadService = new RoadService();
-
+        savedRoutesService = new SavedRoutesService();
         graph = new Graph();
         graph.addCities(cityService.getAllCities());
     }
 
     @Override
     public List<City> findShortestPath(City startCity, City endCity) {
-        // TODO: add savedRoutesService
-//        if(savedRoutesService.findByIds(startCity, endCity) != null){
-//
-//        }
-//        else {
-            return graph.findShortestPath(startCity.getId(), endCity.getId());
-//        }
+
+        List<City> savedRoute = savedRoutesService.getSavedRoute(startCity.getId(), endCity.getId());
+        if (savedRoute != null && !savedRoute.isEmpty()) {
+            return savedRoute;
+        } else {
+            List<City> shortestPath = graph.findShortestPath(startCity.getId(), endCity.getId());
+            savedRoutesService.saveRoute(startCity.getId(), endCity.getId(), shortestPath);
+            return shortestPath;
+        }
     }
 
-    // TODO: implement findShortestPathWithStop() method
     @Override
     public List<City> findShortestPathWithStop(City startCity, City intermediateCity, City endCity){
-        return null;
+
+        List<City> pathToIntermediate = graph.findShortestPath(startCity.getId(), intermediateCity.getId());
+        List<City> pathToEnd = graph.findShortestPath(intermediateCity.getId(), endCity.getId());
+
+        if (pathToIntermediate.isEmpty() || pathToEnd.isEmpty()) {
+
+            // So basically here I return the empty path if either path is not found
+            return new ArrayList<>();
+        }
+
+        // So that we don't have the intermediate city twice
+        pathToIntermediate.remove(pathToIntermediate.size() - 1);
+        // So then here join the two paths
+        List<City> fullPath = new ArrayList<>(pathToIntermediate);
+        fullPath.addAll(pathToEnd);
+
+        return fullPath;
     }
-
-
 }
