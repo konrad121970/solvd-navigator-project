@@ -1,24 +1,36 @@
 package com.solvd.laba.service.route.impl;
 
+import com.solvd.laba.model.City;
 import com.solvd.laba.model.Route;
+import com.solvd.laba.model.RouteCity;
 import com.solvd.laba.persistence.route.IRouteRepository;
 import com.solvd.laba.persistence.route.impl.RouteRepositoryImpl;
+import com.solvd.laba.service.route.IRouteCityService;
 import com.solvd.laba.service.route.IRouteService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class RouteService implements IRouteService {
 
     private final IRouteRepository routeRepository;
+    private final IRouteCityService routeCityService;
 
 
     public RouteService() {
-        this.routeRepository = new RouteRepositoryImpl();
+        routeRepository = new RouteRepositoryImpl();
+        routeCityService = new RouteCityService();
     }
     @Override
     public void createRoute(Route route) {
         routeRepository.create(route);
+
+        route.getCityOrder().forEach( (cityOrderNumber, city) -> {
+            RouteCity routeCity = new RouteCity(route, city, cityOrderNumber);
+            routeCityService.createRouteCity(routeCity);
+        } );
+
     }
     @Override
     public Route getRouteById(Long id) {
