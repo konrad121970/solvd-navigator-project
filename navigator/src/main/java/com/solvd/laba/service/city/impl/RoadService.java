@@ -1,7 +1,7 @@
 package com.solvd.laba.service.city.impl;
 
 import com.solvd.laba.model.Road;
-import com.solvd.laba.persistence.city.RoadRepository;
+import com.solvd.laba.persistence.city.IRoadRepository;
 import com.solvd.laba.persistence.city.impl.RoadRepositoryImpl;
 import com.solvd.laba.service.city.IRoadService;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RoadService implements IRoadService {
 
-    private RoadRepository roadRepository;
+    private IRoadRepository roadRepository;
 
     public RoadService() {
         roadRepository = new RoadRepositoryImpl();

@@ -24,15 +24,7 @@ public class NavigatorService implements INavigatorService {
 
     @Override
     public List<City> findShortestPath(City startCity, City endCity) {
-
-        List<City> savedRoute = savedRoutesService.getSavedRoute(startCity.getId(), endCity.getId());
-        if (savedRoute != null && !savedRoute.isEmpty()) {
-            return savedRoute;
-        } else {
-            List<City> shortestPath = graph.findShortestPath(startCity.getId(), endCity.getId());
-            savedRoutesService.saveRoute(startCity.getId(), endCity.getId(), shortestPath);
-            return shortestPath;
-        }
+      return  graph.findShortestPath(startCity.getId(), endCity.getId());
     }
 
     @Override
@@ -42,7 +34,6 @@ public class NavigatorService implements INavigatorService {
         List<City> pathToEnd = graph.findShortestPath(intermediateCity.getId(), endCity.getId());
 
         if (pathToIntermediate.isEmpty() || pathToEnd.isEmpty()) {
-
             // So basically here I return the empty path if either path is not found
             return new ArrayList<>();
         }

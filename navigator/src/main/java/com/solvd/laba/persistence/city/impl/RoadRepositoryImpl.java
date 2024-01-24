@@ -2,7 +2,7 @@ package com.solvd.laba.persistence.city.impl;
 
 import com.solvd.laba.model.Road;
 import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.city.RoadRepository;
+import com.solvd.laba.persistence.city.IRoadRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoadRepositoryImpl implements RoadRepository {
+public class RoadRepositoryImpl implements IRoadRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_ROAD_QUERY = "INSERT INTO roads (start_city_id, end_city_id, distance) VALUES (?, ?, ?)";

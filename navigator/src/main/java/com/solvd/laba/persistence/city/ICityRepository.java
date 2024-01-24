@@ -4,7 +4,7 @@ import com.solvd.laba.model.City;
 
 import java.util.List;
 
-public interface CityRepository {
+public interface ICityRepository {
 
 
     void create(City city);
