@@ -3,21 +3,23 @@ package com.solvd.laba.model;
 import java.util.Map;
 
 public class Route {
-    private long id;
+    private Long id;
     private Map<Integer, City> cityOrder;
     private int distance;
 
-    public Route(long id, Map<Integer, City> cityOrder, int distance) {
+    public Route() {}
+
+    public Route(Long id, Map<Integer, City> cityOrder, int distance) {
         this.id = id;
         this.cityOrder = cityOrder;
         this.distance = distance;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
