@@ -24,8 +24,6 @@ public class RoadRepositoryImpl implements IRoadRepository {
     public void create(Road road) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(INSERT_ROAD_QUERY)) {
                 stmt.setLong(1, road.getStartCityId());
                 stmt.setLong(2, road.getEndCityId());
@@ -40,21 +38,10 @@ public class RoadRepositoryImpl implements IRoadRepository {
                 stmt.setInt(3, road.getDistance());
                 stmt.executeUpdate();
             }
-
-            connection.commit();
+            LOGGER.info("Road Created");
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Error creating road: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
@@ -64,30 +51,16 @@ public class RoadRepositoryImpl implements IRoadRepository {
         List<Road> roads = new ArrayList<>();
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
                 stmt.setLong(1, cityId);
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    roads.add(mapRow(rs));
+                    roads = mapRow(rs, roads);
                 }
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Error finding roads by city ID: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
         return roads;
@@ -95,37 +68,25 @@ public class RoadRepositoryImpl implements IRoadRepository {
 
     @Override
     public Road findRoadByStartAndEndCity(Long startCityId, Long endCityId) {
-        Road road = null;
+        List<Road> roads = null;
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(SELECT_ROADS_BY_START_CITY_ID_QUERY)) {
                 stmt.setLong(1, startCityId);
                 stmt.setLong(2, endCityId);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
-                    road = mapRow(rs);
+                    roads = mapRow(rs, roads);
                 }
             }
 
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Error finding road: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
-        return road;
+        return roads.get(0);
     }
 
 
@@ -133,29 +94,15 @@ public class RoadRepositoryImpl implements IRoadRepository {
     public void updateRoadDistance(Long startCityId, Long endCityId, int newDistance) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(UPDATE_ROADS_QUERY)) {
                 stmt.setInt(1, newDistance);
                 stmt.setLong(2, startCityId);
                 stmt.setLong(3, endCityId);
                 stmt.executeUpdate();
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Error updating road: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
@@ -164,8 +111,6 @@ public class RoadRepositoryImpl implements IRoadRepository {
     public void deleteRoad(Long startCityId, Long endCityId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROADS_QUERY)) {
                 stmt.setLong(1, startCityId);
                 stmt.setLong(2, endCityId);
@@ -178,29 +123,39 @@ public class RoadRepositoryImpl implements IRoadRepository {
                 stmt.setLong(2, startCityId);
                 stmt.executeUpdate();
             }
-
-            connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Error deleting road: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
 
-    private Road mapRow(ResultSet rs) throws SQLException {
+    public static  List<Road> mapRow(ResultSet rs, List<Road> roads) throws SQLException {
         Long startCityId = rs.getLong("road_start_city_id");
         Long endCityId = rs.getLong("road_end_city_id");
-        int distance = rs.getInt("road_distance");
-        return new Road(startCityId, endCityId, distance);
+
+        if(roads == null){
+            roads = new ArrayList<>();
+        }
+
+        if(startCityId != 0 && endCityId != 0){
+            Road road = findById(startCityId, endCityId, roads);
+            road.setDistance(rs.getInt("road_distance"));
+        }
+        return roads;
     }
+
+    public static Road findById(Long startCityId, Long endCityId, List<Road> roads) {
+        return roads.stream()
+                .filter(road -> road.getStartCityId().equals(startCityId) && road.getEndCityId().equals(endCityId))
+                .findFirst()
+                .orElseGet(() -> {
+                    Road newRoad = new Road();
+                    newRoad.setStartCityId(startCityId);
+                    newRoad.setEndCityId(endCityId);
+                    roads.add(newRoad);
+                    return newRoad;
+                });
+    }
+
 }
