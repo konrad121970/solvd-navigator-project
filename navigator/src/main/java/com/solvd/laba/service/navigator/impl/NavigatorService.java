@@ -4,7 +4,6 @@ import com.solvd.laba.model.City;
 import com.solvd.laba.service.city.ICityService;
 import com.solvd.laba.service.city.impl.CityService;
 import com.solvd.laba.service.navigator.INavigatorService;
-import com.solvd.laba.service.navigator.ISavedRoutesService;
 
 import java.util.*;
 
@@ -12,12 +11,10 @@ public class NavigatorService implements INavigatorService {
 
     private Graph graph;
     private ICityService cityService;
-    private ISavedRoutesService savedRoutesService;
 
 
     public NavigatorService() {
         cityService = new CityService();
-        savedRoutesService = new SavedRoutesService();
         graph = new Graph();
         graph.addCities(cityService.getAllCities());
     }
