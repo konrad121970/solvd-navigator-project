@@ -9,6 +9,9 @@ public class City {
     private Double yPos;
     private List<Road> roads;
 
+    public City() {
+    }
+
     public City(Long id, String name, Double xPos, Double yPos, List<Road> roads) {
         this.id = id;
         this.name = name;
@@ -63,5 +66,10 @@ public class City {
 
     public void setyPos(Double yPos) {
         this.yPos = yPos;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

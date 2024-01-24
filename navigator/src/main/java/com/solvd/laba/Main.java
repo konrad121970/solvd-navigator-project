@@ -1,25 +1,37 @@
 package com.solvd.laba;
 
 import com.solvd.laba.model.City;
-import com.solvd.laba.model.Road;
-import com.solvd.laba.persistence.city.CityRepository;
-import com.solvd.laba.persistence.city.RoadRepository;
-import com.solvd.laba.persistence.city.impl.CityRepositoryImpl;
-import com.solvd.laba.persistence.city.impl.RoadRepositoryImpl;
+import com.solvd.laba.model.Route;
+import com.solvd.laba.persistence.route.IRouteCityRepository;
+import com.solvd.laba.service.city.ICityService;
+import com.solvd.laba.service.city.impl.CityService;
+import com.solvd.laba.service.navigator.INavigatorService;
+import com.solvd.laba.service.navigator.impl.NavigatorService;
+import com.solvd.laba.service.route.IRouteCityService;
+import com.solvd.laba.service.route.IRouteService;
+import com.solvd.laba.service.route.impl.RouteCityService;
+import com.solvd.laba.service.route.impl.RouteService;
+
+import java.util.List;
+import java.util.Optional;
+
 
 public class Main {
     public static void main(String[] args) {
+        ICityService cityService = new CityService();
+        INavigatorService navigatorService = new NavigatorService();
+        IRouteService routeService = new RouteService();
+        IRouteCityService routeCityService = new RouteCityService();
 
-        CityRepository cityRepository = new CityRepositoryImpl();
-        RoadRepository roadRepository = new RoadRepositoryImpl();
+        City city1 = cityService.findCityById(1L);
+        City city2 = cityService.findCityById(4L);
+        City city3 = cityService.findCityById(3L);
 
-        City city = new City("Bialowieza", 12.0,13.0, null);
-        cityRepository.create(city);
-        cityRepository.deleteById(city.getId());
+        List<City> asd = navigatorService.findShortestPath(city1, city2);
+        List<City> asd2 = navigatorService.findShortestPathWithStop(city1, city2, city3);
 
-        Road road = new Road(1L,4L, 200);
-        roadRepository.create(road);
-        roadRepository.deleteRoad(road.getStartCityId(), road.getEndCityId());
+        //System.out.println(navigatorService.getRoadLength(navigatorService.findShortestPath(city1, city2)));
+        System.out.println();
 
     }
 }

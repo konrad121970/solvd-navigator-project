@@ -1,13 +1,15 @@
 package com.solvd.laba.service.city.impl;
 
 import com.solvd.laba.model.City;
-import com.solvd.laba.persistence.city.CityRepository;
+import com.solvd.laba.persistence.city.ICityRepository;
 import com.solvd.laba.persistence.city.impl.CityRepositoryImpl;
 import com.solvd.laba.service.city.ICityService;
 
+import java.util.List;
+
 public class CityService implements ICityService {
 
-    private CityRepository cityRepository;
+    private ICityRepository cityRepository;
     private RoadService roadService;
 
     public CityService() {
@@ -27,10 +29,28 @@ public class CityService implements ICityService {
     }
 
     @Override
+    public City findCity(City city) {
+        City c = cityRepository.findById(city.getId());
+        c.setRoads(roadService.findRoadsByStartCityId(city.getId()));
+        return city;
+    }
+
+    @Override
     public City findCityById(Long id) {
         City city = cityRepository.findById(id);
         city.setRoads(roadService.findRoadsByStartCityId(id));
         return city;
+    }
+
+    @Override
+    public List<City> getAllCities(){
+        List<City> cities  = cityRepository.getAllCities();
+
+        cities.forEach(city -> {
+            city.setRoads(roadService.findRoadsByStartCityId(city.getId()));
+        });
+
+        return cities;
     }
 
     @Override

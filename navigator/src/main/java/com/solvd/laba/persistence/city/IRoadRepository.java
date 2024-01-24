@@ -3,7 +3,7 @@ package com.solvd.laba.persistence.city;
 import com.solvd.laba.model.Road;
 import java.util.List;
 
-public interface RoadRepository {
+public interface IRoadRepository {
 
     void create(Road road);
 

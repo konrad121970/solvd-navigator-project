@@ -5,6 +5,9 @@ public class Road {
     private Long endCityId;
     private int distance;
 
+    public Road() {
+    }
+
     public Road(Long startCityId, Long endCityId, int distance) {
         this.startCityId = startCityId;
         this.endCityId = endCityId;
