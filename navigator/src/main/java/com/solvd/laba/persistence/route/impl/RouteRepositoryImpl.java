@@ -47,8 +47,6 @@ public class RouteRepositoryImpl implements IRouteRepository {
     public void create(Route route) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             // Insert the route and get the generated ID
             try (PreparedStatement routeStmt = connection.prepareStatement(CREATE_ROUTE_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 routeStmt.setInt(1, route.getDistance());
@@ -66,22 +64,11 @@ public class RouteRepositoryImpl implements IRouteRepository {
                     }
                 }
             }
-
-            connection.commit();
             LOGGER.info("Route created: {}", route);
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
+
             LOGGER.error("Creating route failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
@@ -219,10 +206,8 @@ public class RouteRepositoryImpl implements IRouteRepository {
     @Override
     public Optional<Route> getRouteBetweenTwoCities(Long startCityId, Long endCityId) {
         Connection connection = CONNECTION_POOL.getConnection();
-        List<Route> routes = null;
+        List<Route> routes = new ArrayList<>();
         try {
-            connection.setAutoCommit(false);
-
             // Get the route by id
             try (PreparedStatement stmt = connection.prepareStatement(GET_ROUTE_BETWEEN_TWO_CITIES_QUERY)) {
                 stmt.setLong(1, startCityId);
@@ -234,21 +219,15 @@ public class RouteRepositoryImpl implements IRouteRepository {
             }
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Query failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
-        return Optional.ofNullable(routes.get(0));
+
+        if(routes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(routes.get(0));
     }
 
     private List<Route> mapRow(ResultSet rs, List<Route> routes) throws SQLException {
