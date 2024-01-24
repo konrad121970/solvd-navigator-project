@@ -66,7 +66,6 @@ public class RouteRepositoryImpl implements IRouteRepository {
             }
             LOGGER.info("Route created: {}", route);
         } catch (SQLException e) {
-
             LOGGER.error("Creating route failed: {}", e.getMessage());
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
@@ -78,8 +77,6 @@ public class RouteRepositoryImpl implements IRouteRepository {
         Connection connection = CONNECTION_POOL.getConnection();
         List<Route> routes = null;
         try {
-            connection.setAutoCommit(false);
-
             // Get the route by id
             try (PreparedStatement stmt = connection.prepareStatement(GET_ROUTE_BY_ID_QUERY)) {
                 stmt.setLong(1, id);
@@ -89,20 +86,9 @@ public class RouteRepositoryImpl implements IRouteRepository {
                     routes = mapRow(rs, routes);
                 }
             }
-            connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Query failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
         return routes.get(0);
@@ -113,8 +99,6 @@ public class RouteRepositoryImpl implements IRouteRepository {
         Connection connection = CONNECTION_POOL.getConnection();
         List<Route> routes = new ArrayList<>();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(GET_ALL_ROUTES_QUERY)) {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
@@ -123,20 +107,9 @@ public class RouteRepositoryImpl implements IRouteRepository {
                 }
             }
 
-            connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Query failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
         return routes;
@@ -146,29 +119,16 @@ public class RouteRepositoryImpl implements IRouteRepository {
     public void updateById(Route route) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
-
             try (PreparedStatement stmt = connection.prepareStatement(UPDATE_ROUTE_QUERY)) {
                 stmt.setInt(1, route.getDistance());
                 stmt.setLong(2, route.getId());
                 stmt.executeUpdate();
             }
 
-            connection.commit();
             LOGGER.info("Route updated: {}", route);
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Update failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
@@ -177,28 +137,15 @@ public class RouteRepositoryImpl implements IRouteRepository {
     public void deleteById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
-            connection.setAutoCommit(false);
             // Delete the route
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROUTE_QUERY)) {
                 stmt.setLong(1, id);
                 stmt.executeUpdate();
             }
-
-            connection.commit();
             LOGGER.info("Route deleted with id: {}", id);
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                LOGGER.error("Rollback failed: {}", ex.getMessage());
-            }
             LOGGER.error("Delete failed: {}", e.getMessage());
         } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                LOGGER.error("Auto-commit reset failed: {}", e.getMessage());
-            }
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
@@ -217,7 +164,6 @@ public class RouteRepositoryImpl implements IRouteRepository {
                     routes = mapRow(rs, routes);
                 }
             }
-            connection.commit();
         } catch (SQLException e) {
             LOGGER.error("Query failed: {}", e.getMessage());
         } finally {
