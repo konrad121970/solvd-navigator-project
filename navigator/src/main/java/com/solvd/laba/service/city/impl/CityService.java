@@ -29,6 +29,13 @@ public class CityService implements ICityService {
     }
 
     @Override
+    public City findCity(City city) {
+        City c = cityRepository.findById(city.getId());
+        c.setRoads(roadService.findRoadsByStartCityId(city.getId()));
+        return city;
+    }
+
+    @Override
     public City findCityById(Long id) {
         City city = cityRepository.findById(id);
         city.setRoads(roadService.findRoadsByStartCityId(id));

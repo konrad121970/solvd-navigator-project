@@ -9,6 +9,9 @@ public class City {
     private Double yPos;
     private List<Road> roads;
 
+    public City() {
+    }
+
     public City(Long id, String name, Double xPos, Double yPos, List<Road> roads) {
         this.id = id;
         this.name = name;

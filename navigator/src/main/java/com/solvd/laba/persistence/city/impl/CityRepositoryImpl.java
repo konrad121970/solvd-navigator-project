@@ -1,6 +1,7 @@
 package com.solvd.laba.persistence.city.impl;
 
 import com.solvd.laba.model.City;
+import com.solvd.laba.model.Road;
 import com.solvd.laba.persistence.city.ICityRepository;
 import com.solvd.laba.persistence.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
@@ -79,7 +80,7 @@ public class CityRepositoryImpl implements ICityRepository {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                     // Populate city and WITHOUT associated roads
-                    city = mapRow(connection, rs);
+                    city = mapOneRow(rs);
                 }
             }
             connection.commit();
@@ -112,7 +113,7 @@ public class CityRepositoryImpl implements ICityRepository {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     // Populate each city WITHOUT associated roads
-                    City city = mapRow(connection, rs);
+                    City city = mapOneRow(rs);
                     cities.add(city);
                 }
             }
@@ -199,11 +200,52 @@ public class CityRepositoryImpl implements ICityRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
-    private City mapRow(Connection connection, ResultSet rs) throws SQLException {
-        int id = rs.getInt("city_id");
-        String name = rs.getString("city_name");
-        double xPos = rs.getDouble("city_x_pos");
-        double yPos = rs.getDouble("city_y_pos");
-        return new City((long) id, name, xPos, yPos, null);
+    public static List<City> mapRow(ResultSet rs, List<City> cities) throws SQLException {
+        Long id = rs.getLong("city_id");
+
+        if(cities != null){
+            cities = new ArrayList<>();
+        }
+
+        if(id != 0){
+
+            City city = findById(id, cities);
+            city.setName(rs.getString("city_name"));
+            city.setxPos(rs.getDouble("city_x_pos"));
+            city.setyPos(rs.getDouble("city_y_pos"));
+
+            List<Road> roads = RoadRepositoryImpl.mapRow(rs, city.getRoads());
+            city.setRoads(RoadRepositoryImpl.mapRow(rs, roads));
+
+        }
+        return cities;
     }
+
+    public static City mapOneRow(ResultSet rs) throws SQLException {
+        Long id = rs.getLong("city_id");
+        City city = new City();
+
+        if (id != 0) {
+            city.setId(id);
+            city.setName(rs.getString("city_name"));
+            city.setxPos(rs.getDouble("city_x_pos"));
+            city.setyPos(rs.getDouble("city_y_pos"));
+        }
+        return city;
+    }
+
+
+    public static City findById(Long id, List<City> cities) {
+        return cities.stream()
+                .filter(city -> city.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    City newCity = new City();
+                    newCity.setId(id);
+                    cities.add(newCity);
+                    return newCity;
+                });
+    }
+
+
 }
