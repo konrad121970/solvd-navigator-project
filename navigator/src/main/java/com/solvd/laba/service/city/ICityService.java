@@ -7,6 +7,8 @@ import java.util.List;
 public interface ICityService {
     void createCity(City city);
 
+    City findCity(City city);
+
     City findCityById(Long id);
 
     List<City> getAllCities();
