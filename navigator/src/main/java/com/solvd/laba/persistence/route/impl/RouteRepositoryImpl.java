@@ -13,10 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RouteRepositoryImpl implements IRouteRepository {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -220,7 +217,7 @@ public class RouteRepositoryImpl implements IRouteRepository {
     }
 
     @Override
-    public List<Route> getRouteBetweenTwoCities(Long startCityId, Long endCityId) {
+    public Optional<Route> getRouteBetweenTwoCities(Long startCityId, Long endCityId) {
         Connection connection = CONNECTION_POOL.getConnection();
         List<Route> routes = null;
         try {
@@ -251,7 +248,7 @@ public class RouteRepositoryImpl implements IRouteRepository {
             }
             CONNECTION_POOL.releaseConnection(connection);
         }
-        return routes;
+        return Optional.ofNullable(routes.get(0));
     }
 
     private List<Route> mapRow(ResultSet rs, List<Route> routes) throws SQLException {
@@ -271,7 +268,7 @@ public class RouteRepositoryImpl implements IRouteRepository {
                 route.setCityOrder(cityOrder);
             }
 
-            City city = CityRepositoryImpl.mapRow(rs);
+            City city = CityRepositoryImpl.mapOneRow(rs);
             int cityOrderNumber = rs.getInt("rhc_city_order");
             cityOrder.put(cityOrderNumber, city);
         }

@@ -3,6 +3,7 @@ package com.solvd.laba.service.route;
 import com.solvd.laba.model.Route;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IRouteService {
 
@@ -16,5 +17,5 @@ public interface IRouteService {
 
     void deleteRouteById(Long id);
 
-    Route getRouteBetweenTwoCities(Long startCityId, Long endCityId);
+    Optional<Route> getRouteBetweenTwoCities(Long startCityId, Long endCityId);
 }

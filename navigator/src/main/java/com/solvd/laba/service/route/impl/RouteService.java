@@ -6,6 +6,7 @@ import com.solvd.laba.persistence.route.impl.RouteRepositoryImpl;
 import com.solvd.laba.service.route.IRouteService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RouteService implements IRouteService {
 
@@ -36,7 +37,7 @@ public class RouteService implements IRouteService {
         routeRepository.deleteById(id);
     }
     @Override
-    public Route getRouteBetweenTwoCities(Long startCityId, Long endCityId) {
-        return routeRepository.getRouteBetweenTwoCities(startCityId, endCityId).get(0);
+    public Optional<Route> getRouteBetweenTwoCities(Long startCityId, Long endCityId) {
+        return routeRepository.getRouteBetweenTwoCities(startCityId, endCityId);
     }
 }
