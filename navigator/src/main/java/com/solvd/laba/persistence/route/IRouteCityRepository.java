@@ -9,7 +9,7 @@ public interface IRouteCityRepository {
 
     void updateRouteCity(RouteCity routeCity);
 
-    void deleteRouteCity(long routeId, long cityId);
+    void deleteRouteCity(long routeId);
 
     List<RouteCity> getAllRouteCities();
 }

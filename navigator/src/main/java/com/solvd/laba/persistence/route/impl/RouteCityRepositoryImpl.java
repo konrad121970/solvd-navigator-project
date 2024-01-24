@@ -20,7 +20,7 @@ public class RouteCityRepositoryImpl implements IRouteCityRepository {
 
     private static final String ADD_ROUTE_CITY_QUERY = "INSERT INTO routes_has_cities (routes_id, cities_id, city_order) VALUES (?, ?, ?)";
     private static final String UPDATE_ROUTE_CITY_QUERY = "UPDATE routes_has_cities SET city_order = ? WHERE routes_id = ? AND cities_id = ?";
-    private static final String DELETE_ROUTE_CITY_QUERY = "DELETE FROM routes_has_cities WHERE routes_id = ? AND cities_id = ?";
+    private static final String DELETE_ROUTE_CITY_QUERY = "DELETE FROM routes_has_cities WHERE routes_id = ?";
     private static final String GET_ALL_ROUTE_CITIES_QUERY = "SELECT * FROM routes_has_cities";
 
     @Override
@@ -89,7 +89,7 @@ public class RouteCityRepositoryImpl implements IRouteCityRepository {
     }
 
     @Override
-    public void deleteRouteCity(long routeId, long cityId) {
+    public void deleteRouteCity(long routeId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try {
             connection.setAutoCommit(false);
@@ -97,12 +97,11 @@ public class RouteCityRepositoryImpl implements IRouteCityRepository {
             // Delete the route city
             try (PreparedStatement stmt = connection.prepareStatement(DELETE_ROUTE_CITY_QUERY)) {
                 stmt.setLong(1, routeId);
-                stmt.setLong(2, cityId);
                 stmt.executeUpdate();
             }
 
             connection.commit();
-            LOGGER.info("RouteCity deleted with Route ID: {} and City ID: {}", routeId, cityId);
+            LOGGER.info("RouteCity deleted with Route ID: {} and City ID: {}", routeId);
         } catch (SQLException e) {
             try {
                 connection.rollback();
