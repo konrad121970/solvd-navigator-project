@@ -171,17 +171,30 @@ public class Main {
             System.out.println("Shortest path: " + path);
         }
 
-        private static void findShortestPathWithStop() {
+    private static void findShortestPathWithStop() {
+        Long startCityId, stopCityId, endCityId;
+
+        while (true) {
             System.out.print("Enter start city ID: ");
-            Long startCityId = getLongInput();
+            startCityId = getLongInput();
             System.out.print("Enter stop city ID: ");
-            Long stopCityId = getLongInput();
+            stopCityId = getLongInput();
             System.out.print("Enter end city ID: ");
-            Long endCityId = getLongInput();
+            endCityId = getLongInput();
+            if (startCityId.equals(stopCityId) || stopCityId.equals(endCityId) || startCityId.equals(endCityId)) {
+                System.out.println("All cities must be different. Please enter different city IDs.");
+            } else {
+                break;
+            }
+        }
+        try {
             City startCity = cityService.findCityById(startCityId);
             City stopCity = cityService.findCityById(stopCityId);
             City endCity = cityService.findCityById(endCityId);
             List<City> pathWithStop = navigatorService.findShortestPathWithStop(startCity, stopCity, endCity);
             System.out.println("Shortest path with stop: " + pathWithStop);
+        } catch (Exception e) {
+            System.err.println("Error finding shortest path: " + e.getMessage());
+        }
     }
 }
