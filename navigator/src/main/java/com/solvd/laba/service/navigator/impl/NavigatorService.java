@@ -71,6 +71,13 @@ public class NavigatorService implements INavigatorService {
         List<City> pathToIntermediate = graph.findShortestPath(startCity.getId(), intermediateCity.getId());
         List<City> pathToEnd = graph.findShortestPath(intermediateCity.getId(), endCity.getId());
 
+        if (startCity.getId().equals(intermediateCity.getId()) ||
+                intermediateCity.getId().equals(endCity.getId()) ||
+                startCity.getId().equals(endCity.getId())) {
+
+            throw new IllegalArgumentException("Start, stop, and end cities must be different.");
+        }
+
         if (pathToIntermediate.isEmpty() || pathToEnd.isEmpty()) {
             // So basically here I return the empty path if either path is not found
             return new ArrayList<>();

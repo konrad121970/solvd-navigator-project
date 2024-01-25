@@ -172,29 +172,23 @@ public class Main {
         }
 
     private static void findShortestPathWithStop() {
-        Long startCityId, stopCityId, endCityId;
+        System.out.print("Enter start city ID: ");
+        Long startCityId = getLongInput();
+        System.out.print("Enter stop city ID: ");
+        Long stopCityId = getLongInput();
+        System.out.print("Enter end city ID: ");
+        Long endCityId = getLongInput();
 
-        while (true) {
-            System.out.print("Enter start city ID: ");
-            startCityId = getLongInput();
-            System.out.print("Enter stop city ID: ");
-            stopCityId = getLongInput();
-            System.out.print("Enter end city ID: ");
-            endCityId = getLongInput();
-            if (startCityId.equals(stopCityId) || stopCityId.equals(endCityId) || startCityId.equals(endCityId)) {
-                System.out.println("All cities must be different. Please enter different city IDs.");
-            } else {
-                break;
-            }
-        }
         try {
             City startCity = cityService.findCityById(startCityId);
             City stopCity = cityService.findCityById(stopCityId);
             City endCity = cityService.findCityById(endCityId);
             List<City> pathWithStop = navigatorService.findShortestPathWithStop(startCity, stopCity, endCity);
             System.out.println("Shortest path with stop: " + pathWithStop);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error finding shortest path: " + e.getMessage());
+            System.err.println("An error occurred while finding the shortest path: " + e.getMessage());
         }
     }
 }
