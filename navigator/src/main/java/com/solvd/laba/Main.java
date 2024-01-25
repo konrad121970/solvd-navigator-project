@@ -131,18 +131,24 @@ public class Main {
 
 
     private static void addRoad() {
-            System.out.print("Enter start city ID: ");
-            Long startCityId = getLongInput();
-            System.out.print("Enter end city ID: ");
-            Long endCityId = getLongInput();
-            System.out.print("Enter distance: ");
-            int distance = getIntInput();
+        System.out.print("Enter start city ID: ");
+        Long startCityId = getLongInput();
+        System.out.print("Enter end city ID: ");
+        Long endCityId = getLongInput();
+        System.out.print("Enter distance: ");
+        int distance = getIntInput();
+
+        try {
             Road road = new Road(startCityId, endCityId, distance);
             roadService.createRoad(road);
             System.out.println("Road added successfully: " + road);
+        } catch (Exception e) {
+            System.err.println("Error creating road: " + e.getMessage());
         }
+    }
 
-        private static Long getLongInput() {
+
+    private static Long getLongInput() {
             while (true) {
                 try {
                     return scanner.nextLong();
