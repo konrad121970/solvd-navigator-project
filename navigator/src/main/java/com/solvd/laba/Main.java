@@ -101,19 +101,36 @@ public class Main {
             }
         }
 
-        private static void addCity() {
-            System.out.print("Enter city name: ");
-            String name = scanner.next();
-            System.out.print("Enter city X position: ");
-            double xPos = getDoubleInput();
-            System.out.print("Enter city Y position: ");
-            double yPos = getDoubleInput();
-            City city = new City(name, xPos, yPos, null);
-            cityService.createCity(city);
-            System.out.println("City added successfully: " + city);
+    private static void addCity() {
+        System.out.print("Enter city name: ");
+        String name = scanner.next();
+        double xPos, yPos;
+
+        while (true) {
+            System.out.print("Enter city X position (must be >= 0): ");
+            xPos = getDoubleInput();
+            if (xPos >= 0) {
+                break;
+            }
+            System.out.println("X position cannot be lower than 0. Please try again.");
         }
 
-        private static void addRoad() {
+        while (true) {
+            System.out.print("Enter city Y position (must be >= 0): ");
+            yPos = getDoubleInput();
+            if (yPos >= 0) {
+                break;
+            }
+            System.out.println("Y position cannot be lower than 0. Please try again.");
+        }
+
+        City city = new City(name, xPos, yPos, null);
+        cityService.createCity(city);
+        System.out.println("City added successfully: " + city);
+    }
+
+
+    private static void addRoad() {
             System.out.print("Enter start city ID: ");
             Long startCityId = getLongInput();
             System.out.print("Enter end city ID: ");
