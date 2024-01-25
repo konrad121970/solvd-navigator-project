@@ -18,20 +18,25 @@ import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
-        ICityService cityService = new CityService();
-        INavigatorService navigatorService = new NavigatorService();
-        IRouteService routeService = new RouteService();
-        IRouteCityService routeCityService = new RouteCityService();
 
-        City city1 = cityService.findCityById(1L);
-        City city2 = cityService.findCityById(4L);
-        City city3 = cityService.findCityById(3L);
 
-        List<City> asd = navigatorService.findShortestPath(city1, city2);
-        List<City> asd2 = navigatorService.findShortestPathWithStop(city1, city2, city3);
+//        ICityService cityService = new CityService();
+//        INavigatorService navigatorService = new NavigatorService();
+//        IRouteService routeService = new RouteService();
+//        IRouteCityService routeCityService = new RouteCityService();
+//
+//        City city1 = cityService.findCityById(1L);
+//        City city2 = cityService.findCityById(4L);
+//        City city3 = cityService.findCityById(3L);
+//
+//        List<City> asd = navigatorService.findShortestPath(city1, city2);
+//        List<City> asd2 = navigatorService.findShortestPathWithStop(city1, city2, city3);
+//
+//        //System.out.println(navigatorService.getRoadLength(navigatorService.findShortestPath(city1, city2)));
+//        System.out.println();
 
-        //System.out.println(navigatorService.getRoadLength(navigatorService.findShortestPath(city1, city2)));
-        System.out.println();
+
+
 
     }
 }
