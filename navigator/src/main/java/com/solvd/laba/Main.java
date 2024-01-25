@@ -135,9 +135,13 @@ public class Main {
         Long startCityId = getLongInput();
         System.out.print("Enter end city ID: ");
         Long endCityId = getLongInput();
+
+        if (startCityId.equals(endCityId)) {
+            System.out.println("The start and end city cannot be the same. Please enter different IDs.");
+            return;
+        }
         System.out.print("Enter distance: ");
         int distance = getIntInput();
-
         try {
             Road road = new Road(startCityId, endCityId, distance);
             roadService.createRoad(road);
@@ -146,6 +150,7 @@ public class Main {
             System.err.println("Error creating road: " + e.getMessage());
         }
     }
+
 
 
     private static Long getLongInput() {
