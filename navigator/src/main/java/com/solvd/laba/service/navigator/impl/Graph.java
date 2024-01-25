@@ -57,6 +57,10 @@ public class Graph {
         }
         Collections.reverse(shortestPath);
 
+        if(shortestPath.size() == 1){
+            return new ArrayList<>();
+        }
+
         return shortestPath.stream().map(cities::get).collect(Collectors.toList());
     }
 

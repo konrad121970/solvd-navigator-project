@@ -166,6 +166,10 @@ public class Main {
         }
 
     private static void findShortestPath() {
+        System.out.println("Available cities:");
+        List<City> allCities = cityService.getAllCities();
+        allCities.forEach(city -> System.out.println(city.getId() + ". " + city.getName()));
+
         System.out.print("Enter start city ID: ");
         Long startCityId = getLongInput();
         System.out.print("Enter end city ID: ");
@@ -183,13 +187,18 @@ public class Main {
                 return;
             }
             List<City> path = navigatorService.findShortestPath(startCity, endCity);
-            System.out.println("Shortest path: " + path);
+            if(path.size() == 0){
+                System.err.println("There is no such path: ");
+            } else {
+                System.out.println("Shortest path: " + path);
+            }
         } catch (IllegalArgumentException e) {
             System.err.println("Error finding shortest path: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("An error occurred while finding the shortest path: " + e.getMessage());
         }
     }
+
 
 
     private static void findShortestPathWithStop() {
@@ -215,7 +224,12 @@ public class Main {
                 return;
             }
             List<City> pathWithStop = navigatorService.findShortestPathWithStop(startCity, stopCity, endCity);
-            System.out.println("Shortest path with stop: " + pathWithStop);
+
+            if(pathWithStop.isEmpty()){
+                System.err.println("Couldn't find route! ");
+            } else {
+                System.out.println("Shortest path with stop: " + pathWithStop);
+            }
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
         } catch (Exception e) {

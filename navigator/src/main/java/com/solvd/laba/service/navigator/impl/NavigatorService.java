@@ -31,7 +31,7 @@ public class NavigatorService implements INavigatorService {
     }
 
     @Override
-    public List<City> findShortestPath(City startCity, City endCity) {
+    public List<City> findShortestPath(City startCity, City endCity) throws Exception {
         Optional<Route> existingRoute = routeService.getRouteBetweenTwoCities(startCity.getId(), endCity.getId());
         if(existingRoute.isPresent()){
             Map<Integer, City> cityOrder = existingRoute.get().getCityOrder();
@@ -52,17 +52,23 @@ public class NavigatorService implements INavigatorService {
 
             List<City> cities =  graph.findShortestPath(startCity.getId(), endCity.getId());
 
-            for (City city : cities) {
-                cityOrder.put(order, city);
-                order++;
+            if(cities.size() != 0) {
+                for (City city : cities) {
+                    cityOrder.put(order, city);
+                    order++;
+                }
+
+                route.setCityOrder(cityOrder);
+                route.setDistance(getRoadLength(cities));
+                routeService.createRoute(route);
+
+                return cities;
+            } else throw new Exception("Couldn't find route!");
+
+
             }
 
-            route.setCityOrder(cityOrder);
-            route.setDistance(getRoadLength(cities));
-            routeService.createRoute(route);
 
-            return cities;
-        }
     }
 
     @Override
