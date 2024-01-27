@@ -8,6 +8,7 @@ import com.solvd.laba.service.navigator.impl.NavigatorService;
 import com.solvd.laba.model.Road;
 import com.solvd.laba.service.city.IRoadService;
 import com.solvd.laba.service.city.impl.RoadService;
+import com.solvd.laba.ui.MainFrame;
 
 import java.util.*;
 import java.util.List;
@@ -68,6 +69,10 @@ public class Main {
                     case 5:
                         running = false;
                         break;
+                    case 6:
+                        List<City> cities = cityService.getAllCities();
+                        MainFrame mainFrame = new MainFrame("Nawigator", cities);
+                        mainFrame.setVisible(true);
                     default:
                         System.out.println("Invalid choice. Please enter a number between 1 and 5.");
                 }
