@@ -1,5 +1,6 @@
 package com.solvd.laba.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class City {
@@ -67,6 +68,7 @@ public class City {
 
         private Builder() {
             this.city = new City();
+            this.city.setRoads(new ArrayList<>());
         }
 
         public Builder setId(Long id) {

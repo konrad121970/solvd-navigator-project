@@ -16,8 +16,10 @@ import static com.solvd.laba.ui.config.WindowSizeValues.WINDOW_WIDTH;
 
 public class MainPanel extends JPanel {
     private final NavigatorService navigatorService = new NavigatorService();
-    private final List<City> cities = new ArrayList<>();
+    private List<City> cities = new ArrayList<>();
     private List<City> shortestPath = new ArrayList<>();
+
+
 
     public MainPanel() {
         this.setBackground(Color.gray);
@@ -191,6 +193,11 @@ public class MainPanel extends JPanel {
 
     public void addCity(City city) {
         cities.add(city);
+    }
+    public void setCities(List<City> cities) {
+        this.cities = new ArrayList<>();
+
+        cities.forEach(city -> addCity(city));
     }
 
 }

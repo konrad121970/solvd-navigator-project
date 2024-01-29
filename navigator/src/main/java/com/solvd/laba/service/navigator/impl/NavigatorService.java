@@ -10,7 +10,6 @@ import com.solvd.laba.service.navigator.INavigatorService;
 import com.solvd.laba.service.route.IRouteService;
 import com.solvd.laba.service.route.impl.RouteService;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -27,6 +26,11 @@ public class NavigatorService implements INavigatorService {
         routeService = new RouteService();
         roadService = new RoadService();
         graph = new Graph();
+        graph.addCities(cityService.getAllCities());
+    }
+
+    @Override
+    public void updateCitiesList(){
         graph.addCities(cityService.getAllCities());
     }
 
@@ -50,6 +54,7 @@ public class NavigatorService implements INavigatorService {
 
             int order = 1;
 
+            updateCitiesList();
             List<City> cities =  graph.findShortestPath(startCity.getId(), endCity.getId());
 
             if(cities.size() != 0) {

@@ -17,9 +17,12 @@ public class Graph {
         cities.put(city.getId(), city);
     }
 
-    public void addCities(List<City> cities){
-        cities.forEach(city -> addCity(city));
+    public void addCities(List<City> cityList){
+        this.cities.clear();
+        cityList.forEach(city -> addCity(city));
     }
+
+
 
     public List<City> findShortestPath(Long startCityId, Long endCityId) {
         Map<Long, Integer> distances = new HashMap<>();
