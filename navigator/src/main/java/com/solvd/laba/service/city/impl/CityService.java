@@ -1,6 +1,8 @@
 package com.solvd.laba.service.city.impl;
 
+import com.solvd.laba.config.Config;
 import com.solvd.laba.model.City;
+import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.city.ICityRepository;
 import com.solvd.laba.persistence.city.impl.CityRepositoryImpl;
 import com.solvd.laba.service.city.ICityService;
@@ -13,7 +15,7 @@ public class CityService implements ICityService {
     private RoadService roadService;
 
     public CityService() {
-        cityRepository = new CityRepositoryImpl();
+        cityRepository = RepositoryFactory.createCityRepository(Config.IMPL.getValue());
         roadService = new RoadService();
     }
 
