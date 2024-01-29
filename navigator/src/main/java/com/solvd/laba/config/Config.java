@@ -10,7 +10,8 @@ public enum Config {
     URL("url"),
     USERNAME("username"),
     PASSWORD("password"),
-    POOL_SIZE("poolSize");
+    POOL_SIZE("poolSize"),
+    IMPL("impl");
 
     private static final Logger LOGGER = LogManager.getLogger(Config.class);
     private static final Properties prop = new Properties();
