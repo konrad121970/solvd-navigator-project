@@ -1,6 +1,8 @@
 package com.solvd.laba.service.route.impl;
 
+import com.solvd.laba.config.Config;
 import com.solvd.laba.model.RouteCity;
+import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.route.IRouteCityRepository;
 import com.solvd.laba.persistence.route.impl.RouteCityRepositoryImpl;
 import com.solvd.laba.service.route.IRouteCityService;
@@ -12,7 +14,7 @@ public class RouteCityService implements IRouteCityService {
     private final IRouteCityRepository routeCityRepository;
 
     public RouteCityService() {
-        this.routeCityRepository = new RouteCityRepositoryImpl();
+        this.routeCityRepository = RepositoryFactory.createRouteCityRepository(Config.IMPL.getValue());
     }
 
     @Override

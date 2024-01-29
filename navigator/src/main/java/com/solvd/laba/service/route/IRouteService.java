@@ -13,6 +13,8 @@ public interface IRouteService {
 
     List<Route> getAllRoutes();
 
+    List<Route> findRoutesByStartCityId(Long startCityId);
+
     void updateRoute(Route route);
 
     void deleteRouteById(Long id);

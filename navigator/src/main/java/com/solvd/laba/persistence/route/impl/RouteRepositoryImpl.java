@@ -37,6 +37,15 @@ public class RouteRepositoryImpl implements IRouteRepository {
             ") " +
             "ORDER BY rhc.city_order";
 
+
+    private static final String SELECT_ROUTES_BY_START_CITY_ID = "SELECT r.id as route_id, r.distance as route_distance, " +
+            "   rhc.city_order as rhc_city_order, " +
+            "       c.id as city_id, c.name as city_name, c.x_pos as city_x_pos, c.y_pos as city_y_pos " +
+            "FROM routes_has_cities rhc " +
+            "join routes r on r.id = rhc.routes_id " +
+            "JOIN cities c ON rhc.cities_id = c.id " +
+            "WHERE rhc.cities_id = ?";
+
     private static final String CREATE_ROUTE_QUERY = "INSERT INTO routes (distance) VALUES (?)";
     private static final String GET_ROUTE_BY_ID_QUERY = "SELECT id as route_id, distance FROM routes WHERE id = ?";
     private static final String UPDATE_ROUTE_QUERY = "UPDATE routes SET distance = ? WHERE id = ?";
@@ -100,6 +109,28 @@ public class RouteRepositoryImpl implements IRouteRepository {
         List<Route> routes = new ArrayList<>();
         try {
             try (PreparedStatement stmt = connection.prepareStatement(GET_ALL_ROUTES_QUERY)) {
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    // Populate each route WITHOUT associated cities
+                    routes = mapRow(rs, routes);
+                }
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error("Query failed: {}", e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return routes;
+    }
+
+    @Override
+    public List<Route> getRoutesByStartCityId(Long startCityId) {
+        Connection connection = CONNECTION_POOL.getConnection();
+        List<Route> routes = new ArrayList<>();
+        try {
+            try (PreparedStatement stmt = connection.prepareStatement(SELECT_ROUTES_BY_START_CITY_ID)) {
+                stmt.setLong(1, startCityId);
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     // Populate each route WITHOUT associated cities

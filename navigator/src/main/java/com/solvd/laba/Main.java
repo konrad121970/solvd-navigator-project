@@ -16,30 +16,15 @@ import java.util.Scanner;
 
 
 public class Main {
-
-
-//        ICityService cityService = new CityService();
-//        INavigatorService navigatorService = new NavigatorService();
-//        IRouteService routeService = new RouteService();
-//        IRouteCityService routeCityService = new RouteCityService();
-//
-//        City city1 = cityService.findCityById(1L);
-//        City city2 = cityService.findCityById(4L);
-//        City city3 = cityService.findCityById(3L);
-//
-//        List<City> asd = navigatorService.findShortestPath(city1, city2);
-//        List<City> asd2 = navigatorService.findShortestPathWithStop(city1, city2, city3);
-//
-//        //System.out.println(navigatorService.getRoadLength(navigatorService.findShortestPath(city1, city2)));
-//        System.out.println();
-
         private static final Scanner scanner = new Scanner(System.in);
+        private static MainFrame mainFrame = null;
         private static final ICityService cityService = new CityService();
         private static final IRoadService roadService = new RoadService();
         private static final INavigatorService navigatorService = new NavigatorService();
 
         public static void main(String[] args) {
-
+            List<City> cities = cityService.getAllCities();
+            mainFrame = new MainFrame("Nawigator", cities);
 
             boolean running = true;
             while (running) {
@@ -49,7 +34,8 @@ public class Main {
                 System.out.println("2. Add Road");
                 System.out.println("3. Find Shortest Path Between Cities");
                 System.out.println("4. Find Shortest Path With Stop");
-                System.out.println("5. Exit");
+                System.out.println("5. Open GUI");
+                System.out.println("6. Exit");
                 System.out.print("Enter your choice: ");
 
                 int choice = getIntInput();
@@ -67,12 +53,11 @@ public class Main {
                         findShortestPathWithStop();
                         break;
                     case 5:
-                        running = false;
+                        mainFrame.setVisible(true);
                         break;
                     case 6:
-                        List<City> cities = cityService.getAllCities();
-                        MainFrame mainFrame = new MainFrame("Nawigator", cities);
-                        mainFrame.setVisible(true);
+                        running = false;
+                        break;
                     default:
                         System.out.println("Invalid choice. Please enter a number between 1 and 5.");
                 }
@@ -108,7 +93,7 @@ public class Main {
 
     private static void addCity() {
         System.out.print("Enter city name: ");
-        String name = scanner.next();
+        String name = scanner.nextLine();
         double xPos, yPos;
 
         while (true) {
@@ -129,33 +114,57 @@ public class Main {
             System.out.println("Y position cannot be lower than 0. Please try again.");
         }
 
-        City city = new City(name, xPos, yPos, null);
+        City city = City.builder()
+                .setName(name)
+                .setXPos(xPos)
+                .setYPos(yPos)
+                .build();
+
         cityService.createCity(city);
+        mainFrame.addCity(city);
+        navigatorService.updateCitiesList();
         System.out.println("City added successfully: " + city);
     }
 
 
     private static void addRoad() {
+        System.out.println("Available cities:");
+        List<City> allCities = cityService.getAllCities();
+        allCities.forEach(city -> System.out.println(city.getId() + ". " + city.getName()));
+
         System.out.print("Enter start city ID: ");
         Long startCityId = getLongInput();
         System.out.print("Enter end city ID: ");
         Long endCityId = getLongInput();
 
+        if (!isValidCityId(startCityId, allCities) || !isValidCityId(endCityId, allCities)) {
+            System.out.println("Invalid city ID. Please enter a valid city ID from the list.");
+            return;
+        }
+
         if (startCityId.equals(endCityId)) {
             System.out.println("The start and end city cannot be the same. Please enter different IDs.");
             return;
         }
+
         System.out.print("Enter distance: ");
         int distance = getIntInput();
+
         try {
             Road road = new Road(startCityId, endCityId, distance);
             roadService.createRoad(road);
             System.out.println("Road added successfully: " + road);
+            navigatorService.updateCitiesList();
         } catch (Exception e) {
             System.err.println("Error creating road: " + e.getMessage());
         }
+        allCities = cityService.getAllCities();
+        mainFrame.setCities(allCities);
     }
 
+    private static boolean isValidCityId(Long cityId, List<City> cities) {
+        return cities.stream().anyMatch(city -> city.getId().equals(cityId));
+    }
 
 
     private static Long getLongInput() {
