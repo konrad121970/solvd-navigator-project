@@ -64,7 +64,7 @@ public class City {
     }
 
     public static class Builder {
-        private City city;
+        private final City city;
 
         private Builder() {
             this.city = new City();

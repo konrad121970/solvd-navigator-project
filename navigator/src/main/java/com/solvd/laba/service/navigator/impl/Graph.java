@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Graph {
-    private Map<Long, City> cities;
+    private final Map<Long, City> cities;
 
     public Graph() {
         this.cities = new HashMap<>();

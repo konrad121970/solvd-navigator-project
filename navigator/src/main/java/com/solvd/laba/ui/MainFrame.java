@@ -11,7 +11,7 @@ import static com.solvd.laba.ui.config.WindowSizeValues.WINDOW_WIDTH;
 
 
 public class MainFrame extends JFrame{
-    private MainPanel mainPanel;
+    private final MainPanel mainPanel;
 
     public MainFrame(String title, List<City> cities) throws HeadlessException {
         super(title);

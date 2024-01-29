@@ -15,10 +15,10 @@ import java.util.List;
 
 public class NavigatorService implements INavigatorService {
 
-    private Graph graph;
-    private ICityService cityService;
-    private IRouteService routeService;
-    private IRoadService roadService;
+    private final Graph graph;
+    private final ICityService cityService;
+    private final IRouteService routeService;
+    private final IRoadService roadService;
 
 
     public NavigatorService() {

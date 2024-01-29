@@ -4,15 +4,14 @@ import com.solvd.laba.config.Config;
 import com.solvd.laba.model.City;
 import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.city.ICityRepository;
-import com.solvd.laba.persistence.city.impl.CityRepositoryImpl;
 import com.solvd.laba.service.city.ICityService;
 
 import java.util.List;
 
 public class CityService implements ICityService {
 
-    private ICityRepository cityRepository;
-    private RoadService roadService;
+    private final RoadService roadService;
+    private final ICityRepository cityRepository;
 
     public CityService() {
         cityRepository = RepositoryFactory.createCityRepository(Config.IMPL.getValue());
@@ -23,7 +22,7 @@ public class CityService implements ICityService {
     public void createCity(City city) {
         cityRepository.create(city);
 
-        if(city.getRoads() != null){
+        if (city.getRoads() != null) {
             city.getRoads().forEach(road -> {
                 roadService.createRoad(road);
             });
@@ -45,8 +44,8 @@ public class CityService implements ICityService {
     }
 
     @Override
-    public List<City> getAllCities(){
-        List<City> cities  = cityRepository.getAllCities();
+    public List<City> getAllCities() {
+        List<City> cities = cityRepository.getAllCities();
 
         cities.forEach(city -> {
             city.setRoads(roadService.findRoadsByStartCityId(city.getId()));

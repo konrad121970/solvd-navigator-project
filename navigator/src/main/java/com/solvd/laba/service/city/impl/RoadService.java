@@ -5,8 +5,6 @@ import com.solvd.laba.model.Road;
 import com.solvd.laba.model.Route;
 import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.city.IRoadRepository;
-import com.solvd.laba.persistence.city.impl.RoadRepositoryImpl;
-import com.solvd.laba.persistence.route.IRouteRepository;
 import com.solvd.laba.service.city.IRoadService;
 import com.solvd.laba.service.route.IRouteService;
 import com.solvd.laba.service.route.impl.RouteService;
@@ -15,8 +13,8 @@ import java.util.List;
 
 public class RoadService implements IRoadService {
 
-    private IRoadRepository roadRepository;
-    private IRouteService routeService;
+    private final IRoadRepository roadRepository;
+    private final IRouteService routeService;
 
     public RoadService() {
         roadRepository = RepositoryFactory.createRoadRepository(Config.IMPL.getValue());
