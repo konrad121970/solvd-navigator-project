@@ -2,6 +2,7 @@ package com.solvd.laba.model;
 
 import java.util.List;
 
+
 public class City {
     private Long id;
     private String name;
@@ -9,23 +10,53 @@ public class City {
     private Double yPos;
     private List<Road> roads;
 
-    public City() {
+    private City(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.xPos = builder.xPos;
+        this.yPos = builder.yPos;
+        this.roads = builder.roads;
     }
 
-    public City(Long id, String name, Double xPos, Double yPos, List<Road> roads) {
-        this.id = id;
-        this.name = name;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.roads = roads;
-    }
+    public static class Builder {
+        private Long id;
+        private String name;
+        private Double xPos;
+        private Double yPos;
+        private List<Road> roads;
 
-    // Constructor for creating new city without id:
-    public City(String name, Double xPos, Double yPos, List<Road> roads) {
-        this.name = name;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.roads = roads;
+        public Builder() {
+            // Set default values or leave them null
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder xPos(Double xPos) {
+            this.xPos = xPos;
+            return this;
+        }
+
+        public Builder yPos(Double yPos) {
+            this.yPos = yPos;
+            return this;
+        }
+
+        public Builder roads(List<Road> roads) {
+            this.roads = roads;
+            return this;
+        }
+
+        public City build() {
+            return new City(this);
+        }
     }
 
     public List<Road> getRoads() {
@@ -73,3 +104,4 @@ public class City {
         return name;
     }
 }
+
