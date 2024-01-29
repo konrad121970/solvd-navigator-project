@@ -223,13 +223,19 @@ public class CityRepositoryImpl implements ICityRepository {
 
     public static City mapOneRow(ResultSet rs) throws SQLException {
         Long id = rs.getLong("city_id");
-        City city = new City();
-
+        City city = null;
         if (id != 0) {
-            city.setId(id);
-            city.setName(rs.getString("city_name"));
-            city.setxPos(rs.getDouble("city_x_pos"));
-            city.setyPos(rs.getDouble("city_y_pos"));
+            city = City.builder()
+                    .setId(id)
+                    .setName(rs.getString("city_name"))
+                    .setXPos(rs.getDouble("city_x_pos"))
+                    .setYPos(rs.getDouble("city_y_pos"))
+                    .build();
+
+//            city.setId(id);
+//            city.setName();
+//            city.setxPos();
+//            city.setyPos();
         }
         return city;
     }
@@ -240,7 +246,9 @@ public class CityRepositoryImpl implements ICityRepository {
                 .filter(city -> city.getId().equals(id))
                 .findFirst()
                 .orElseGet(() -> {
-                    City newCity = new City();
+                    City newCity = City.builder()
+                            .setId(id)
+                            .build();
                     newCity.setId(id);
                     cities.add(newCity);
                     return newCity;

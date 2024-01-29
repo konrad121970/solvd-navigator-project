@@ -129,7 +129,12 @@ public class Main {
             System.out.println("Y position cannot be lower than 0. Please try again.");
         }
 
-        City city = new City(name, xPos, yPos, null);
+        City city = City.builder()
+                .setName(name)
+                .setXPos(xPos)
+                .setYPos(yPos)
+                .build();
+
         cityService.createCity(city);
         System.out.println("City added successfully: " + city);
     }
