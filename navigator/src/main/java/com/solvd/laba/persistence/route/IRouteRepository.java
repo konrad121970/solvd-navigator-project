@@ -1,6 +1,5 @@
 package com.solvd.laba.persistence.route;
 
-import com.solvd.laba.model.City;
 import com.solvd.laba.model.Route;
 
 import java.util.List;
@@ -12,6 +11,8 @@ public interface IRouteRepository {
     Route findById(Long id);
 
     List<Route> getAllRoutes();
+
+    List<Route> getRoutesByStartCityId(Long startCityId);
 
     void updateById(Route route);
 
