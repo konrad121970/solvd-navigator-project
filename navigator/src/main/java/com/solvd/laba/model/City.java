@@ -2,7 +2,6 @@ package com.solvd.laba.model;
 
 import java.util.List;
 
-
 public class City {
     private Long id;
     private String name;
@@ -10,53 +9,12 @@ public class City {
     private Double yPos;
     private List<Road> roads;
 
-    private City(Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.xPos = builder.xPos;
-        this.yPos = builder.yPos;
-        this.roads = builder.roads;
+    private City() {
+        // Private constructor to enforce the use of the builder
     }
 
-    public static class Builder {
-        private Long id;
-        private String name;
-        private Double xPos;
-        private Double yPos;
-        private List<Road> roads;
-
-        public Builder() {
-            // Set default values or leave them null
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder xPos(Double xPos) {
-            this.xPos = xPos;
-            return this;
-        }
-
-        public Builder yPos(Double yPos) {
-            this.yPos = yPos;
-            return this;
-        }
-
-        public Builder roads(List<Road> roads) {
-            this.roads = roads;
-            return this;
-        }
-
-        public City build() {
-            return new City(this);
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
     public List<Road> getRoads() {
@@ -103,5 +61,40 @@ public class City {
     public String toString() {
         return name;
     }
-}
 
+    public static class Builder {
+        private City city;
+
+        private Builder() {
+            this.city = new City();
+        }
+
+        public Builder setId(Long id) {
+            city.id = id;
+            return this;
+        }
+        public Builder setName(String name) {
+            city.name = name;
+            return this;
+        }
+
+        public Builder setXPos(Double xPos) {
+            city.xPos = xPos;
+            return this;
+        }
+
+        public Builder setYPos(Double yPos) {
+            city.yPos = yPos;
+            return this;
+        }
+
+        public Builder setRoads(List<Road> roads) {
+            city.roads = roads;
+            return this;
+        }
+
+        public City build() {
+            return city;
+        }
+    }
+}
