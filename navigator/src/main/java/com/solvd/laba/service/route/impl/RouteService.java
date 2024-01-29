@@ -1,17 +1,14 @@
 package com.solvd.laba.service.route.impl;
 
 import com.solvd.laba.config.Config;
-import com.solvd.laba.model.City;
 import com.solvd.laba.model.Route;
 import com.solvd.laba.model.RouteCity;
 import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.route.IRouteRepository;
-import com.solvd.laba.persistence.route.impl.RouteRepositoryImpl;
 import com.solvd.laba.service.route.IRouteCityService;
 import com.solvd.laba.service.route.IRouteService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class RouteService implements IRouteService {
@@ -41,6 +38,10 @@ public class RouteService implements IRouteService {
     @Override
     public List<Route> getAllRoutes() {
         return routeRepository.getAllRoutes();
+    }
+    @Override
+    public List<Route> findRoutesByStartCityId(Long startCityId) {
+        return routeRepository.getRoutesByStartCityId(startCityId);
     }
     @Override
     public void updateRoute(Route route) {
