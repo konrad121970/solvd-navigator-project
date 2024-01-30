@@ -10,86 +10,95 @@ import com.solvd.laba.service.city.IRoadService;
 import com.solvd.laba.service.city.impl.RoadService;
 import com.solvd.laba.ui.MainFrame;
 
+
 import java.util.*;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class Main {
-        private static final Scanner scanner = new Scanner(System.in);
-        private static MainFrame mainFrame = null;
-        private static final ICityService cityService = new CityService();
-        private static final IRoadService roadService = new RoadService();
-        private static final INavigatorService navigatorService = new NavigatorService();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static MainFrame mainFrame = null;
+    private static final ICityService cityService = new CityService();
+    private static final IRoadService roadService = new RoadService();
+    private static final INavigatorService navigatorService = new NavigatorService();
 
-        public static void main(String[] args) {
-            List<City> cities = cityService.getAllCities();
-            mainFrame = new MainFrame("Navigator", cities);
+    private static final CityService cityServiceObserver = new CityService();
+    private static final NavigatorService navigatorServiceObserver = new NavigatorService();
 
-            boolean running = true;
-            while (running) {
-                System.out.println("\n--- Welcome to the app created by navigator team! ---");
-                System.out.println("\n--- Main Menu ---");
-                System.out.println("1. Add City");
-                System.out.println("2. Add Road");
-                System.out.println("3. Find Shortest Path Between Cities");
-                System.out.println("4. Find Shortest Path With Stop");
-                System.out.println("5. Open GUI");
-                System.out.println("6. Exit");
-                System.out.print("Enter your choice: ");
 
-                int choice = getIntInput();
-                switch (choice) {
-                    case 1:
-                        addCity();
-                        break;
-                    case 2:
-                        addRoad();
-                        break;
-                    case 3:
-                        findShortestPath();
-                        break;
-                    case 4:
-                        findShortestPathWithStop();
-                        break;
-                    case 5:
-                        mainFrame.setVisible(true);
-                        break;
-                    case 6:
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please enter a number between 1 and 5.");
-                }
-            }
 
-            scanner.close();
-            System.out.println("Exiting program.");
-        }
 
-        private static int getIntInput() {
-            while (true) {
-                try {
-                    return scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    System.out.print("Invalid input. Please enter a valid integer: ");
-                } finally {
-                    scanner.nextLine();
-                }
+    public static void main(String[] args) {
+        List<City> cities = cityService.getAllCities();
+        mainFrame = new MainFrame("Navigator", cities);
+        cityServiceObserver.attach(navigatorServiceObserver);
+
+
+        boolean running = true;
+        while (running) {
+            System.out.println("\n--- Welcome to the app created by navigator team! ---");
+            System.out.println("\n--- Main Menu ---");
+            System.out.println("1. Add City");
+            System.out.println("2. Add Road");
+            System.out.println("3. Find Shortest Path Between Cities");
+            System.out.println("4. Find Shortest Path With Stop");
+            System.out.println("5. Open GUI");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = getIntInput();
+            switch (choice) {
+                case 1:
+                    addCity();
+                    break;
+                case 2:
+                    addRoad();
+                    break;
+                case 3:
+                    findShortestPath();
+                    break;
+                case 4:
+                    findShortestPathWithStop();
+                    break;
+                case 5:
+                    mainFrame.setVisible(true);
+                    break;
+                case 6:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 5.");
             }
         }
 
-        private static double getDoubleInput() {
-            while (true) {
-                try {
-                    return scanner.nextDouble();
-                } catch (InputMismatchException e) {
-                    System.out.print("Invalid input. Please enter a valid decimal number: ");
-                } finally {
-                    scanner.nextLine();
-                }
+        scanner.close();
+        System.out.println("Exiting program.");
+    }
+
+    private static int getIntInput() {
+        while (true) {
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a valid integer: ");
+            } finally {
+                scanner.nextLine();
             }
         }
+    }
+
+    private static double getDoubleInput() {
+        while (true) {
+            try {
+                return scanner.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a valid decimal number: ");
+            } finally {
+                scanner.nextLine();
+            }
+        }
+    }
 
     private static void addCity() {
         System.out.print("Enter city name: ");
@@ -168,16 +177,16 @@ public class Main {
 
 
     private static Long getLongInput() {
-            while (true) {
-                try {
-                    return scanner.nextLong();
-                } catch (InputMismatchException e) {
-                    System.out.print("Invalid input. Please enter a valid long integer: ");
-                } finally {
-                    scanner.nextLine();
-                }
+        while (true) {
+            try {
+                return scanner.nextLong();
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid input. Please enter a valid long integer: ");
+            } finally {
+                scanner.nextLine();
             }
         }
+    }
 
     private static void findShortestPath() {
         System.out.println("Available cities:");
