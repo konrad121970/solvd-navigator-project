@@ -29,9 +29,10 @@ WHERE rhc1.cities_id = 1
                          WHERE routes_id = rhc1.routes_id);
 
 -- Find all cities on one route
-SELECT rhc.city_order, c.name
+SELECT r.id as routes_id, r.distance as routes_distance, rhc.city_order as rhc_city_order, c.name as city_name, c.x_pos as city_x_pos, c.y_pos as city_y_pos
 FROM routes_has_cities rhc
 JOIN cities c ON rhc.cities_id = c.id
+join routes r ON r.id = rhc.routes_id
 WHERE rhc.routes_id = (
     SELECT rhc1.routes_id
     FROM routes_has_cities rhc1
@@ -39,8 +40,25 @@ WHERE rhc.routes_id = (
     WHERE rhc1.cities_id = @start_city_id
       AND rhc2.cities_id = @end_city_id
       AND rhc1.city_order = 1
-      AND rhc2.city_order = (SELECT MAX(city_order) 
-							 FROM routes_has_cities 
+      AND rhc2.city_order = (SELECT MAX(city_order)
+							 FROM routes_has_cities
                              where routes_id = rhc2.routes_id)
 )
 ORDER BY rhc.city_order;
+
+
+SELECT rhc.routes_id, r.distance, rhc.city_order, c.name, c.x_pos, c.y_pos
+                    FROM routes_has_cities rhc
+                    JOIN cities c ON rhc.cities_id = c.id
+                    join routes r ON r.id = rhc.routes_id
+                    WHERE rhc.routes_id = 1
+                    ORDER BY rhc.city_order;
+
+
+SELECT r.id as route_id, r.distance as route_distance,
+	   rhc.city_order as rhc_city_order,
+       c.id as city_id, c.name as city_name, c.x_pos as city_x_pos, c.y_pos as city_y_pos
+FROM routes_has_cities rhc
+join routes r on r.id = rhc.routes_id
+JOIN cities c ON rhc.cities_id = c.id
+WHERE rhc.cities_id = 1;
