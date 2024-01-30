@@ -89,7 +89,8 @@ public class MainPanel extends JPanel {
                     repaint();
 
                     SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(this, "Shortest path length: " + navigatorService.getRoadLength(shortestPath));
+                        JOptionPane.showMessageDialog(this, "Shortest path length: " + navigatorService.getRoadLength(shortestPath) +
+                                 "\n " + shortestPath);
                     });
                 }
 
@@ -108,7 +109,8 @@ public class MainPanel extends JPanel {
                     repaint();
 
                     SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(this, "Shortest path length: " + navigatorService.getRoadLength(shortestPath));
+                        JOptionPane.showMessageDialog(this, "Shortest path length: " + navigatorService.getRoadLength(shortestPath) +
+                                "\n " + shortestPath);
                     });
                 }
                 repaint();

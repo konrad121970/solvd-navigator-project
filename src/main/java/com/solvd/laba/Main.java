@@ -204,7 +204,7 @@ public class Main {
             if(path.size() == 0){
                 System.err.println("There is no such path: ");
             } else {
-                System.out.println("Shortest path: " + path);
+                System.out.println("Shortest path: " + path + "\nRoute length: " + navigatorService.getRoadLength(path));
             }
         } catch (IllegalArgumentException e) {
             System.err.println("Error finding shortest path: " + e.getMessage());
@@ -216,6 +216,9 @@ public class Main {
 
 
     private static void findShortestPathWithStop() {
+        System.out.println("Available cities:");
+        List<City> allCities = cityService.getAllCities();
+        allCities.forEach(city -> System.out.println(city.getId() + ". " + city.getName()));
 
         Long startCityId, stopCityId, endCityId;
         System.out.print("Enter start city ID: ");
@@ -229,6 +232,13 @@ public class Main {
             System.out.println("Start, stop, and end cities must be different.");
             return;
         }
+
+        // Validate city IDs
+        if (!isValidCityId(startCityId, allCities) || !isValidCityId(stopCityId, allCities) || !isValidCityId(endCityId, allCities)) {
+            System.out.println("Invalid city ID. Please enter a valid city ID from the list.");
+            return;
+        }
+
         try {
             City startCity = cityService.findCityById(startCityId);
             City stopCity = cityService.findCityById(stopCityId);
@@ -237,12 +247,13 @@ public class Main {
                 System.out.println("One or more of the specified cities do not exist.");
                 return;
             }
+
             List<City> pathWithStop = navigatorService.findShortestPathWithStop(startCity, stopCity, endCity);
 
-            if(pathWithStop.isEmpty()){
-                System.err.println("Couldn't find route! ");
+            if (pathWithStop.isEmpty()) {
+                System.err.println("Couldn't find route!");
             } else {
-                System.out.println("Shortest path with stop: " + pathWithStop);
+                System.out.println("Shortest path with stop: " + pathWithStop + "\nRoute length: " + navigatorService.getRoadLength(pathWithStop));
             }
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
@@ -250,4 +261,5 @@ public class Main {
             System.err.println("An error occurred while finding the shortest path with stop: " + e.getMessage());
         }
     }
+
 }
