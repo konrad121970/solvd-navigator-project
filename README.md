@@ -31,6 +31,17 @@ The Solvd Navigator Project is a terminal-operated navigation system designed to
 - [x] **Design Patterns**
     - Utilizes design patterns such as Singleton, Builder pattern, Listener, and Factory method.
 
+## Configuration
+ - To connect to your database you have to edit the config.properties file:
+```text
+driver = com.mysql.cj.jdbc.Driver
+url = // YOUR_DB_URL
+username = // YOUR_DB_USERNAME
+password = // YOUR_DB_PASSWORD
+poolSize = 5
+impl = jdbc
+```
+
 ## Database Initialization SQL script
 ```sql
 create database if not exists navigator_db;
@@ -71,23 +82,18 @@ CREATE TABLE IF NOT EXISTS routes_has_cities (
 	routes (id) on delete cascade on update no action
 );
 
-USE navigator_db;
-
-
--- INSERT for the 'cities' table
 INSERT INTO cities (name, x_pos, y_pos) VALUES
 ('A', 10.0, 10.0),
 ('B', 40.0, 40.0),
 ('C', 100.0, 20.0),
 ('D', 20.0, 60.0),
 ('E', 60.0, 80.0),
-('F', 80.0, 30.0),
-('G', 120.0, 60.0),
-('H', 50.0, 100.0),
+('F', 50.0, 30.0),
+('G', 120.0, 40.0),
+('H', 90.0, 100.0),
 ('I', 90.0, 120.0),
 ('J', 140.0, 80.0);
 
--- INSERT for the 'roads' table
 INSERT INTO roads (start_city_id, end_city_id, distance) VALUES
 (1, 2, 40),  -- A->B
 (2, 1, 40),
@@ -111,12 +117,11 @@ INSERT INTO roads (start_city_id, end_city_id, distance) VALUES
 (9, 4, 40),
 (5, 10, 90), -- E->J
 (10, 5, 90);
--- INSERT for the 'routes' table
+
 INSERT INTO routes (distance) VALUES
 (90), -- Sample route 1
 (200); -- Sample route 2
 
--- INSERT for the 'routes_has_cities' table
 INSERT INTO routes_has_cities (routes_id, cities_id, city_order) VALUES
 -- A -> E Route
 (1, 1, 1), -- Sample route 1: City A
