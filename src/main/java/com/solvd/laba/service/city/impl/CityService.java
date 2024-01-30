@@ -2,16 +2,21 @@ package com.solvd.laba.service.city.impl;
 
 import com.solvd.laba.config.Config;
 import com.solvd.laba.model.City;
+import com.solvd.laba.observer.Observer;
+import com.solvd.laba.observer.Subject;
 import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.city.ICityRepository;
 import com.solvd.laba.service.city.ICityService;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CityService implements ICityService {
+public class CityService implements ICityService, Subject {
 
     private final RoadService roadService;
     private final ICityRepository cityRepository;
+    private final List<Observer> observers = new ArrayList<>();
+
 
     public CityService() {
         cityRepository = RepositoryFactory.createCityRepository(Config.IMPL.getValue());
@@ -27,6 +32,8 @@ public class CityService implements ICityService {
                 roadService.createRoad(road);
             });
         }
+
+        notifyObservers();
     }
 
     @Override
@@ -65,4 +72,15 @@ public class CityService implements ICityService {
     }
 
 
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
 }

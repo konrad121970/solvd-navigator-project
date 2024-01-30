@@ -9,11 +9,13 @@ import com.solvd.laba.service.city.impl.RoadService;
 import com.solvd.laba.service.navigator.INavigatorService;
 import com.solvd.laba.service.route.IRouteService;
 import com.solvd.laba.service.route.impl.RouteService;
+import com.solvd.laba.observer.Observer;
+
 
 import java.util.*;
 import java.util.List;
 
-public class NavigatorService implements INavigatorService {
+public class NavigatorService implements INavigatorService, Observer {
 
     private final Graph graph;
     private final ICityService cityService;
@@ -27,6 +29,12 @@ public class NavigatorService implements INavigatorService {
         roadService = new RoadService();
         graph = new Graph();
         graph.addCities(cityService.getAllCities());
+    }
+
+
+    @Override
+    public void update() {
+        updateCitiesList();
     }
 
     @Override
