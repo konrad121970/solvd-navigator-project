@@ -38,6 +38,24 @@ public class CityServiceTest {
         Assert.assertNull(cityService.findCityById(city.getId()));
     }
 
+    @Test
+    public void updateCity(){
+        City city = City.builder()
+                .setName("Hajnówka")
+                .setXPos(20.0)
+                .setYPos(45.0)
+                .build();
+
+        cityService.createCity(city);
+        city.setName("Bialystok");
+
+        cityService.updateCity(city);
+        City updatedCity = cityService.findCityById(city.getId());
+
+        Assert.assertNotNull(updatedCity);
+        Assert.assertEquals(updatedCity.getName(), "Bialystok");
+    }
+
 
 
 
