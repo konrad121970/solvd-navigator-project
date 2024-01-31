@@ -24,7 +24,7 @@ public class Main {
 
         public static void main(String[] args) {
             List<City> cities = cityService.getAllCities();
-            mainFrame = new MainFrame("Nawigator", cities);
+            mainFrame = new MainFrame("Navigator", cities);
 
             boolean running = true;
             while (running) {
