@@ -55,8 +55,4 @@ public class CityServiceTest {
         Assert.assertNotNull(updatedCity);
         Assert.assertEquals(updatedCity.getName(), "Bialystok");
     }
-
-
-
-
 }
