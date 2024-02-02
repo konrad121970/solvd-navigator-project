@@ -1,4 +1,4 @@
-package com.solvd.laba;
+package com.solvd.laba.integration;
 
 import com.solvd.laba.service.city.ICityService;
 import com.solvd.laba.service.city.impl.CityService;

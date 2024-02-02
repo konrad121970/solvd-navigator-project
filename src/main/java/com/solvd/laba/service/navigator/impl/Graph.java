@@ -40,14 +40,16 @@ public class Graph {
         while (!priorityQueue.isEmpty()) {
             Long currentCityId = priorityQueue.poll();
 
-            for (Road road : cities.get(currentCityId).getRoads()) {
-                Long neighborCityId = road.getEndCityId();
-                int newDistance = distances.get(currentCityId) + road.getDistance();
+            if(cities.containsKey(currentCityId)){
+                for (Road road : cities.get(currentCityId).getRoads()) {
+                    Long neighborCityId = road.getEndCityId();
+                    int newDistance = distances.get(currentCityId) + road.getDistance();
 
-                if (newDistance < distances.get(neighborCityId)) {
-                    distances.put(neighborCityId, newDistance);
-                    predecessors.put(neighborCityId, currentCityId);
-                    priorityQueue.add(neighborCityId);
+                    if (newDistance < distances.get(neighborCityId)) {
+                        distances.put(neighborCityId, newDistance);
+                        predecessors.put(neighborCityId, currentCityId);
+                        priorityQueue.add(neighborCityId);
+                    }
                 }
             }
         }
@@ -64,7 +66,7 @@ public class Graph {
             return new ArrayList<>();
         }
 
-        return shortestPath.stream().map(cities::get).collect(Collectors.toList());
+        return shortestPath.stream().map(cities::get).toList();
     }
 
     public int getRoadLength(List<City> citiesOnPath) {
