@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Application Suite" verbose="10" parallel="methods" thread-count="5">
+<suite name="Application Suite" verbose="10" parallel="methods" thread-count="10">
     <test name="App test">
         <classes>
             <class name="com.solvd.laba.unit.service.GraphTest"/>
