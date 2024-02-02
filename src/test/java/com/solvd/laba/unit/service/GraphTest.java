@@ -79,7 +79,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testFindShortestPath_InvalidEndCity() {
+    public void testFindShortestPathWithInvalidEndCity() {
         Long startCityId = 1L;
         Long endCityId = 99999999999L;
 
@@ -90,7 +90,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testFindShortestPath_InvalidStartCity() {
+    public void testFindShortestPathWithInvalidStartCity() {
         Long startCityId = 1999999999999999L;
         Long endCityId = 1L;
 

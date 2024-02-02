@@ -6,7 +6,6 @@
         </Console>
 
         <RollingFile name="fileLogger"
-                     fileName="target/logs/app.log"
                      filePattern="logs/app-%d{yyyy-MM-dd}.log">
             <PatternLayout>
                 <pattern>
